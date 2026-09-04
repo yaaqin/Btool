@@ -59,7 +59,7 @@ Pembeda utamanya: produk ini membandingkan HTML mentah dengan DOM hasil render, 
 | Tampilan temuan | Dikelompokkan per severity, tiap item punya penjelasan + cara perbaiki |
 | Tampilan fakta mentah | Metadata apa adanya, supaya bisa diverifikasi user |
 | Cek `robots.txt` | Apakah halaman diblokir |
-| Rate limiting | Per IP |
+| Rate limiting | Per IP, default 3x per 4 jam, konfigurabel lewat env var |
 
 Target waktu analisis: **di bawah 3 detik.**
 
@@ -134,7 +134,7 @@ Salah menandai hal yang benar sebagai error akan menghancurkan kepercayaan lebih
 | Waktu respons (rendered) | < 30 detik, dengan indikator progres |
 | Timeout fetch | 10 detik |
 | Batas ukuran response | 5 MB |
-| Rate limit | 10 audit per IP per menit |
+| Rate limit | 3 audit per IP per 4 jam (default; jumlah dan durasinya diatur lewat env var `RATE_LIMIT_MAX` / `RATE_LIMIT_WINDOW`, tanpa perlu ubah kode) |
 | Uptime | Best effort |
 
 **Keamanan** — proteksi SSRF adalah kebutuhan wajib, bukan opsional. Detail implementasi di FSD. Ini bagian yang paling sering dilewatkan orang saat membangun tool sejenis, dan konsekuensinya nyata: URL seperti `http://169.254.169.254/latest/meta-data/` bisa membocorkan credential cloud.
