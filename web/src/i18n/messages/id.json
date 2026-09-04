@@ -1,0 +1,43 @@
+{
+  "header": {
+    "brand": "SEO Audit",
+    "tagline": "Raw vs rendered, bukan skor",
+    "theme": {
+      "light": "Ganti ke tema terang",
+      "dark": "Ganti ke tema gelap"
+    }
+  },
+  "hero": {
+    "title": "Lihat apa yang benar-benar dibaca crawler",
+    "description": "Masukkan satu URL. Kami bandingkan HTML mentah dengan DOM hasil render, lalu jelaskan artinya buat crawler.",
+    "placeholder": "https://contoh.com/halaman",
+    "cta": "Analisis",
+    "ctaLoading": "Menganalisis…",
+    "noScoreNote": "Tanpa skor tunggal — temuan diurutkan berdasarkan dampak."
+  },
+  "summary": {
+    "title": "Ringkasan",
+    "critical": "Critical",
+    "warning": "Warning",
+    "info": "Info"
+  },
+  "facts": {
+    "title": "Fakta yang ditemukan",
+    "descriptionHint": "Verifikasi sendiri sebelum membaca temuan di bawah.",
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "canonical": "Canonical",
+      "robots": "Robots",
+      "h1": "H1",
+      "statusCode": "Status"
+    },
+    "empty": "(tidak ada)"
+  },
+  "findings": {
+    "title": "Temuan",
+    "why": "Kenapa ini penting",
+    "fix": "Cara memperbaiki",
+    "evidence": "Bukti"
+  }
+}
