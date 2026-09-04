@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from "@/components/icons";
 import type { Dictionary } from "@/i18n/dictionaries";
-import type { Finding, Severity } from "@/lib/mock-audit";
+import type { Finding, Severity } from "@/lib/audit";
 
 const SEVERITY_ORDER: Severity[] = ["critical", "warning", "info"];
 
@@ -27,7 +27,7 @@ export function FindingsList({
       <h2 className="text-sm font-semibold">{dict.findings.title}</h2>
       {sorted.map((finding) => (
         <details
-          key={finding.ruleId}
+          key={finding.rule_id}
           className="group rounded-2xl border border-border bg-card p-5 shadow-sm open:shadow-md"
         >
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4">

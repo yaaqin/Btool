@@ -5,23 +5,35 @@ import { UrlForm } from "@/components/audit/url-form";
 import { SummaryCards } from "@/components/audit/summary-cards";
 import { FactsPanel } from "@/components/audit/facts-panel";
 import { FindingsList } from "@/components/audit/findings-list";
-import { buildMockAudit, type AuditResult } from "@/lib/mock-audit";
+import { AuditRequestError, runAudit, type AuditResult } from "@/lib/audit";
 import type { Dictionary } from "@/i18n/dictionaries";
 
-type Status = "idle" | "loading" | "done";
+type Status = "idle" | "loading" | "done" | "error";
+
+function formatRetryAfter(seconds: number): string {
+  const hours = Math.ceil(seconds / 3600);
+  if (hours >= 1) return `${hours}h`;
+  const minutes = Math.ceil(seconds / 60);
+  return `${minutes}m`;
+}
 
 export function AuditWorkspace({ dict }: { dict: Dictionary }) {
   const [status, setStatus] = useState<Status>("idle");
   const [result, setResult] = useState<AuditResult | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  function handleSubmit(url: string) {
+  async function handleSubmit(url: string) {
     setStatus("loading");
     setResult(null);
-    // Placeholder delay until the real /api/v1/audits endpoint exists.
-    window.setTimeout(() => {
-      setResult(buildMockAudit(url));
+
+    try {
+      const audit = await runAudit(url);
+      setResult(audit);
       setStatus("done");
-    }, 900);
+    } catch (err) {
+      setErrorMessage(describeError(err, dict));
+      setStatus("error");
+    }
   }
 
   return (
@@ -49,13 +61,33 @@ export function AuditWorkspace({ dict }: { dict: Dictionary }) {
         </div>
       )}
 
+      {status === "error" && (
+        <div className="rounded-2xl border border-critical/30 bg-critical-bg p-6 text-center text-sm text-critical">
+          {errorMessage}
+        </div>
+      )}
+
       {status === "done" && result && (
         <section className="flex flex-col gap-6">
-          <SummaryCards result={result} dict={dict} />
+          <SummaryCards summary={result.summary} dict={dict} />
           <FactsPanel result={result} dict={dict} />
           <FindingsList findings={result.findings} dict={dict} />
         </section>
       )}
     </div>
   );
+}
+
+function describeError(err: unknown, dict: Dictionary): string {
+  if (err instanceof AuditRequestError) {
+    if (err.message === "network") return dict.hero.errorNetwork;
+    if (err.status === 429) {
+      const time =
+        err.retryAfterSeconds !== undefined
+          ? formatRetryAfter(err.retryAfterSeconds)
+          : "a while";
+      return dict.hero.errorRateLimited.replace("{time}", time);
+    }
+  }
+  return dict.hero.errorGeneric;
 }

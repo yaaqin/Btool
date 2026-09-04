@@ -1,5 +1,5 @@
 import type { Dictionary } from "@/i18n/dictionaries";
-import type { AuditResult } from "@/lib/mock-audit";
+import type { AuditResult } from "@/lib/audit";
 
 export function FactsPanel({
   result,
@@ -8,13 +8,12 @@ export function FactsPanel({
   result: AuditResult;
   dict: Dictionary;
 }) {
-  const rows: Array<{ label: string; value: string | null }> = [
+  const rows: Array<{ label: string; value: string | undefined }> = [
     { label: dict.facts.fields.title, value: result.facts.title },
     { label: dict.facts.fields.description, value: result.facts.description },
     { label: dict.facts.fields.canonical, value: result.facts.canonical },
     { label: dict.facts.fields.robots, value: result.facts.robots },
-    { label: dict.facts.fields.h1, value: String(result.facts.h1Count) },
-    { label: dict.facts.fields.statusCode, value: String(result.statusCode) },
+    { label: dict.facts.fields.statusCode, value: String(result.status_code) },
   ];
 
   return (

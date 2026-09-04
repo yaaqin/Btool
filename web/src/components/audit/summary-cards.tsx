@@ -4,7 +4,7 @@ import {
   InfoIcon,
 } from "@/components/icons";
 import type { Dictionary } from "@/i18n/dictionaries";
-import type { AuditResult, Severity } from "@/lib/mock-audit";
+import type { AuditSummary, Severity } from "@/lib/audit";
 
 const TONE_CLASSES: Record<Severity, string> = {
   critical: "bg-critical-bg text-critical",
@@ -13,19 +13,12 @@ const TONE_CLASSES: Record<Severity, string> = {
 };
 
 export function SummaryCards({
-  result,
+  summary,
   dict,
 }: {
-  result: AuditResult;
+  summary: AuditSummary;
   dict: Dictionary;
 }) {
-  const counts: Record<Severity, number> = {
-    critical: 0,
-    warning: 0,
-    info: 0,
-  };
-  for (const finding of result.findings) counts[finding.severity]++;
-
   const cards: Array<{
     severity: Severity;
     label: string;
@@ -52,7 +45,7 @@ export function SummaryCards({
             </span>
             <div>
               <p className="text-2xl font-semibold leading-tight">
-                {counts[severity]}
+                {summary[severity]}
               </p>
               <p className="text-sm text-muted-foreground">{label}</p>
             </div>

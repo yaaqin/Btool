@@ -13,7 +13,10 @@
     "placeholder": "https://contoh.com/halaman",
     "cta": "Analisis",
     "ctaLoading": "Menganalisis…",
-    "noScoreNote": "Tanpa skor tunggal — temuan diurutkan berdasarkan dampak."
+    "noScoreNote": "Tanpa skor tunggal — temuan diurutkan berdasarkan dampak.",
+    "errorNetwork": "Tidak bisa menghubungi API. Pastikan backend sedang jalan, lalu coba lagi.",
+    "errorRateLimited": "Batas rate limit tercapai. Coba lagi dalam {time}.",
+    "errorGeneric": "Terjadi kesalahan saat menganalisis URL itu. Coba lagi."
   },
   "summary": {
     "title": "Ringkasan",
@@ -29,7 +32,6 @@
       "description": "Description",
       "canonical": "Canonical",
       "robots": "Robots",
-      "h1": "H1",
       "statusCode": "Status"
     },
     "empty": "(tidak ada)"

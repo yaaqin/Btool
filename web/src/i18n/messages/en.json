@@ -13,7 +13,10 @@
     "placeholder": "https://example.com/page",
     "cta": "Analyze",
     "ctaLoading": "Analyzing…",
-    "noScoreNote": "No single score — findings are listed in order of impact instead."
+    "noScoreNote": "No single score — findings are listed in order of impact instead.",
+    "errorNetwork": "Couldn't reach the API. Make sure the backend is running, then try again.",
+    "errorRateLimited": "Rate limit reached. Try again in {time}.",
+    "errorGeneric": "Something went wrong analyzing that URL. Try again."
   },
   "summary": {
     "title": "Summary",
@@ -29,7 +32,6 @@
       "description": "Description",
       "canonical": "Canonical",
       "robots": "Robots",
-      "h1": "H1",
       "statusCode": "Status"
     },
     "empty": "(none)"
