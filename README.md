@@ -10,10 +10,8 @@ Detail lengkap ada di [brd.md](brd.md), [prd.md](prd.md), dan [fsd.md](fsd.md).
 
 ```
 .
-├── cmd/api/          # entrypoint backend
-├── internal/         # handler, fetcher, parser, rules, report
-├── web/               # frontend (Next.js)
-└── render-service/    # fase 2, belum ada
+├── api/     # backend (Go) — cmd/api, internal/{handler,fetcher,parser,rules,report}
+└── web/     # frontend (Next.js)
 ```
 
 ## Menjalankan secara lokal
@@ -21,6 +19,7 @@ Detail lengkap ada di [brd.md](brd.md), [prd.md](prd.md), dan [fsd.md](fsd.md).
 **Backend (Go)** — jalan di port `9721`
 
 ```bash
+cd api
 go run ./cmd/api
 ```
 
