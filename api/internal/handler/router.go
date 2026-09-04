@@ -10,5 +10,6 @@ import (
 func NewRouter(limiter *ratelimit.Limiter) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", HealthCheck)
-	return limiter.Middleware(mux)
+	mux.HandleFunc("POST /api/v1/audits", CreateAudit)
+	return withCORS(limiter.Middleware(mux))
 }
