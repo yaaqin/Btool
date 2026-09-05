@@ -1,0 +1,11 @@
+services:
+  btool-api:
+    container_name: btool-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:9721:9721"
+    env_file:
+      - ./api/.env
+    restart: unless-stopped
