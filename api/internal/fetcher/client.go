@@ -15,7 +15,6 @@ const (
 	// or slow-drip response can't exhaust memory.
 	MaxBodyBytes = 5 << 20 // 5 MB
 	maxRedirects = 5
-	userAgent    = "SEOAuditBot/0.1 (+https://github.com/yaaqin/builder-tool)"
 )
 
 var ErrTooManyRedirects = errors.New("too many redirects")
@@ -32,8 +31,9 @@ type FetchResult struct {
 // Fetch validates rawURL, performs the HTTP GET, and returns the body
 // capped at MaxBodyBytes along with the final URL and redirect chain. Every
 // redirect hop is re-validated (see ValidateURL) so a public URL can't
-// redirect its way into a private address.
-func Fetch(ctx context.Context, rawURL string) (*FetchResult, error) {
+// redirect its way into a private address. userAgentHeader is sent as-is —
+// see UserAgent for the presets callers should pick from.
+func Fetch(ctx context.Context, rawURL string, userAgentHeader string) (*FetchResult, error) {
 	if _, err := ValidateURL(rawURL); err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func Fetch(ctx context.Context, rawURL string) (*FetchResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", userAgent)
+	req.Header.Set("User-Agent", userAgentHeader)
 
 	fetchedAt := time.Now()
 	resp, err := client.Do(req)

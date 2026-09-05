@@ -9,24 +9,6 @@ import (
 	"github.com/yaaqin/builder-tool/internal/parser"
 )
 
-type HTTPStatusRule struct{}
-
-func (HTTPStatusRule) ID() string { return "http_status" }
-
-func (HTTPStatusRule) Check(f *parser.PageFacts) []Finding {
-	if f.StatusCode < 200 || f.StatusCode >= 300 {
-		return []Finding{{
-			RuleID:   "HTTP_STATUS_NOT_OK",
-			Severity: Critical,
-			Title:    "Page did not respond with a 2xx status",
-			Detail:   fmt.Sprintf("Final response status was %d.", f.StatusCode),
-			Why:      "Search engines generally won't index pages that don't return a success status.",
-			Fix:      "Make sure the page responds with 200 OK, or fix the redirect or error causing this status.",
-		}}
-	}
-	return nil
-}
-
 // searchPathPattern matches paths/query params that usually mean "this is
 // a search-results page" — see the noindex context note below.
 var searchPathPattern = regexp.MustCompile(`(?i)(/search|/cari|/hasil-pencarian|[?&](q|query|s|search)=)`)
@@ -63,33 +45,6 @@ func (RobotsNoindexRule) Check(f *parser.PageFacts) []Finding {
 		Why:      "A noindex page is dropped from search results even if everything else about it is correct.",
 		Fix:      "Remove noindex from the meta robots tag if this page should be indexed.",
 	}}
-}
-
-type RobotsTxtRule struct{}
-
-func (RobotsTxtRule) ID() string { return "robots_txt" }
-
-func (RobotsTxtRule) Check(f *parser.PageFacts) []Finding {
-	if f.RobotsTxt == nil || !f.RobotsTxt.Fetched {
-		return nil
-	}
-
-	u, err := url.Parse(f.URL)
-	if err != nil {
-		return nil
-	}
-
-	if f.RobotsTxt.Blocks(u.Path) {
-		return []Finding{{
-			RuleID:   "ROBOTS_TXT_BLOCKS",
-			Severity: Critical,
-			Title:    "robots.txt blocks this page",
-			Detail:   fmt.Sprintf("robots.txt disallows a path matching %s.", u.Path),
-			Why:      "Crawlers that respect robots.txt won't even fetch this page, regardless of its content.",
-			Fix:      "Update robots.txt to allow this path, if it should be crawlable.",
-		}}
-	}
-	return nil
 }
 
 type RedirectRule struct{}

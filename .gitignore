@@ -13,3 +13,6 @@
 .idea/
 .vscode/
 *.swp
+
+# local Claude Code session state
+.claude/
