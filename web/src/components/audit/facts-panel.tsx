@@ -1,19 +1,24 @@
 import type { Dictionary } from "@/i18n/dictionaries";
-import type { AuditResult } from "@/lib/audit";
+import type { AuditFacts } from "@/lib/audit";
 
 export function FactsPanel({
-  result,
+  facts,
+  statusCode,
   dict,
 }: {
-  result: AuditResult;
+  facts: AuditFacts;
+  statusCode?: number;
   dict: Dictionary;
 }) {
   const rows: Array<{ label: string; value: string | undefined }> = [
-    { label: dict.facts.fields.title, value: result.facts.title },
-    { label: dict.facts.fields.description, value: result.facts.description },
-    { label: dict.facts.fields.canonical, value: result.facts.canonical },
-    { label: dict.facts.fields.robots, value: result.facts.robots },
-    { label: dict.facts.fields.statusCode, value: String(result.status_code) },
+    { label: dict.facts.fields.title, value: facts.title },
+    { label: dict.facts.fields.description, value: facts.description },
+    { label: dict.facts.fields.canonical, value: facts.canonical },
+    { label: dict.facts.fields.robots, value: facts.robots },
+    {
+      label: dict.facts.fields.statusCode,
+      value: statusCode !== undefined ? String(statusCode) : undefined,
+    },
   ];
 
   return (

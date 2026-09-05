@@ -16,7 +16,15 @@
     "noScoreNote": "Tanpa skor tunggal — temuan diurutkan berdasarkan dampak.",
     "errorNetwork": "Tidak bisa menghubungi API. Pastikan backend sedang jalan, lalu coba lagi.",
     "errorRateLimited": "Batas rate limit tercapai. Coba lagi dalam {time}.",
-    "errorGeneric": "Terjadi kesalahan saat menganalisis URL itu. Coba lagi."
+    "errorGeneric": "Terjadi kesalahan saat menganalisis URL itu. Coba lagi.",
+    "userAgentLabel": "Crawl sebagai",
+    "userAgentGooglebot": "Googlebot",
+    "userAgentGeneric": "Bot generik"
+  },
+  "outcome": {
+    "title": "Halaman tidak bisa diaudit",
+    "skippedNote": "Pemeriksaan konten (title, description, canonical, dll) dilewati karena HTML halaman yang sebenarnya tidak berhasil diambil.",
+    "checkedAs": "Dicek sebagai {ua}"
   },
   "summary": {
     "title": "Ringkasan",

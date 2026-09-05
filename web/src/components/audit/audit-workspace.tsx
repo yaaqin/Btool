@@ -2,10 +2,17 @@
 
 import { useState } from "react";
 import { UrlForm } from "@/components/audit/url-form";
+import { UserAgentSelector } from "@/components/audit/user-agent-selector";
+import { OutcomeBanner } from "@/components/audit/outcome-banner";
 import { SummaryCards } from "@/components/audit/summary-cards";
 import { FactsPanel } from "@/components/audit/facts-panel";
 import { FindingsList } from "@/components/audit/findings-list";
-import { AuditRequestError, runAudit, type AuditResult } from "@/lib/audit";
+import {
+  AuditRequestError,
+  runAudit,
+  type AuditResult,
+  type UserAgentChoice,
+} from "@/lib/audit";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 type Status = "idle" | "loading" | "done" | "error";
@@ -21,13 +28,14 @@ export function AuditWorkspace({ dict }: { dict: Dictionary }) {
   const [status, setStatus] = useState<Status>("idle");
   const [result, setResult] = useState<AuditResult | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [userAgent, setUserAgent] = useState<UserAgentChoice>("googlebot");
 
   async function handleSubmit(url: string) {
     setStatus("loading");
     setResult(null);
 
     try {
-      const audit = await runAudit(url);
+      const audit = await runAudit(url, userAgent);
       setResult(audit);
       setStatus("done");
     } catch (err) {
@@ -52,7 +60,12 @@ export function AuditWorkspace({ dict }: { dict: Dictionary }) {
           cta={dict.hero.cta}
           ctaLoading={dict.hero.ctaLoading}
         />
-        <p className="text-xs text-muted-foreground">{dict.hero.noScoreNote}</p>
+        <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
+          <p className="text-xs text-muted-foreground">
+            {dict.hero.noScoreNote}
+          </p>
+          <UserAgentSelector value={userAgent} onChange={setUserAgent} dict={dict} />
+        </div>
       </section>
 
       {status === "loading" && (
@@ -67,10 +80,18 @@ export function AuditWorkspace({ dict }: { dict: Dictionary }) {
         </div>
       )}
 
-      {status === "done" && result && (
+      {status === "done" && result && result.outcome !== "ok" && (
+        <OutcomeBanner result={result} dict={dict} />
+      )}
+
+      {status === "done" && result && result.outcome === "ok" && result.facts && (
         <section className="flex flex-col gap-6">
           <SummaryCards summary={result.summary} dict={dict} />
-          <FactsPanel result={result} dict={dict} />
+          <FactsPanel
+            facts={result.facts}
+            statusCode={result.status_code}
+            dict={dict}
+          />
           <FindingsList findings={result.findings} dict={dict} />
         </section>
       )}

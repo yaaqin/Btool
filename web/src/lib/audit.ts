@@ -1,5 +1,16 @@
 export type Severity = "critical" | "warning" | "info";
 
+export type Outcome =
+  | "ok"
+  | "blocked_by_robots"
+  | "blocked_by_server"
+  | "http_error"
+  | "redirect_issue"
+  | "timeout"
+  | "dns_error";
+
+export type UserAgentChoice = "googlebot" | "generic";
+
 export interface Finding {
   rule_id: string;
   severity: Severity;
@@ -26,11 +37,14 @@ export interface AuditSummary {
 export interface AuditResult {
   url: string;
   final_url: string;
-  status_code: number;
+  status_code?: number;
+  user_agent: UserAgentChoice;
   fetched_at: string;
   duration_ms: number;
+  outcome: Outcome;
+  outcome_message?: string;
   summary: AuditSummary;
-  facts: AuditFacts;
+  facts?: AuditFacts;
   findings: Finding[];
 }
 
@@ -55,13 +69,16 @@ export class AuditRequestError extends Error {
   }
 }
 
-export async function runAudit(url: string): Promise<AuditResult> {
+export async function runAudit(
+  url: string,
+  userAgent: UserAgentChoice = "googlebot"
+): Promise<AuditResult> {
   let res: Response;
   try {
     res = await fetch(`${API_BASE_URL}/api/v1/audits`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({ url, user_agent: userAgent }),
     });
   } catch {
     throw new AuditRequestError("network");

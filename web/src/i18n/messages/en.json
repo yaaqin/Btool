@@ -16,7 +16,15 @@
     "noScoreNote": "No single score — findings are listed in order of impact instead.",
     "errorNetwork": "Couldn't reach the API. Make sure the backend is running, then try again.",
     "errorRateLimited": "Rate limit reached. Try again in {time}.",
-    "errorGeneric": "Something went wrong analyzing that URL. Try again."
+    "errorGeneric": "Something went wrong analyzing that URL. Try again.",
+    "userAgentLabel": "Crawl as",
+    "userAgentGooglebot": "Googlebot",
+    "userAgentGeneric": "Generic bot"
+  },
+  "outcome": {
+    "title": "Page couldn't be audited",
+    "skippedNote": "Content checks (title, description, canonical, and the rest) were skipped because the real page HTML wasn't available.",
+    "checkedAs": "Checked as {ua}"
   },
   "summary": {
     "title": "Summary",
