@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
+
 	"github.com/yaaqin/builder-tool/internal/handler"
 	"github.com/yaaqin/builder-tool/internal/ratelimit"
 )
@@ -12,6 +14,9 @@ import (
 const defaultPort = "9721"
 
 func main() {
+	// Missing .env is fine — real deployments set env vars directly.
+	_ = godotenv.Load()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
