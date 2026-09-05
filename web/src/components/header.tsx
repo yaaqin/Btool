@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { Dictionary, Locale } from "@/i18n/dictionaries";
@@ -27,6 +28,12 @@ export function Header({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Link
+            href="/doc"
+            className="rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {dict.header.docs}
+          </Link>
           <LanguageSwitcher locale={locale} />
           <ThemeToggle
             theme={theme}

@@ -2,6 +2,7 @@
   "header": {
     "brand": "SEO Audit",
     "tagline": "Raw vs rendered, bukan skor",
+    "docs": "Panduan",
     "theme": {
       "light": "Ganti ke tema terang",
       "dark": "Ganti ke tema gelap"
@@ -49,5 +50,68 @@
     "why": "Kenapa ini penting",
     "fix": "Cara memperbaiki",
     "evidence": "Bukti"
+  },
+  "doc": {
+    "pageTitle": "Cara Pakai & Panduan",
+    "backLink": "Kembali ke audit",
+    "intro": {
+      "title": "Tentang tool ini",
+      "body": "Tool ini membandingkan HTML mentah suatu halaman dengan apa yang sebenarnya bisa dibaca crawler, lalu menyusun daftar temuan yang bisa langsung ditindaklanjuti — bukan skor tunggal. Ranking di mesin pencari ditentukan banyak faktor lain (relevansi konten, backlink, otoritas domain, dsb) yang tidak bisa diukur dari satu URL, jadi tool ini fokus mengukur hygiene teknis, bukan menjanjikan posisi di hasil pencarian."
+    },
+    "usage": {
+      "title": "Cara pakai",
+      "steps": [
+        "Masukkan URL halaman yang mau diperiksa, lalu klik Analyze.",
+        "Pilih user-agent yang mau dipakai untuk crawl: Googlebot atau Generic bot (penjelasan lengkap di bawah).",
+        "Kalau berhasil, kamu akan melihat ringkasan jumlah temuan per severity, fakta mentah yang ditemukan (title, description, canonical, dst), dan daftar temuan lengkap beserta alasan dan cara memperbaikinya.",
+        "Kalau halaman gagal diambil atau diblokir, satu banner penjelasan akan muncul sebagai ganti daftar temuan — lihat bagian \"Kalau muncul banner\" di bawah."
+      ]
+    },
+    "userAgent": {
+      "title": "Googlebot vs Generic bot",
+      "googlebot": {
+        "title": "Googlebot",
+        "body": "Meniru Googlebot: mengirim header User-Agent milik Googlebot, dan dicocokkan ke grup khusus Googlebot di robots.txt situs target (kalau ada). Ini menjawab pertanyaan \"apakah Google bisa merayapi halaman ini?\" — paling relevan buat kebanyakan orang."
+      },
+      "generic": {
+        "title": "Generic bot",
+        "body": "Menggunakan identitas bot milik tool ini sendiri, dicocokkan ke grup umum (User-agent: *) di robots.txt. Ini menjawab pertanyaan \"apa yang bisa dilihat crawler generik yang tidak diberi perlakuan khusus?\" — berguna kalau situs target punya aturan robots.txt yang beda antara Googlebot dan bot lain."
+      },
+      "note": "Hasilnya bisa beda tergantung user-agent yang dipilih, karena robots.txt bisa punya aturan berbeda per user-agent. Catatan penting: banyak situs besar memverifikasi identitas Googlebot lewat reverse-DNS/IP asli Google, bukan cuma dari header User-Agent — jadi walau kamu pilih Googlebot, situs seperti LinkedIn tetap bisa menolak request-nya. Itu bukan bug, itu memang sistem keamanan mereka bekerja sesuai desain."
+    },
+    "outcomes": {
+      "title": "Kalau muncul banner alih-alih daftar temuan",
+      "intro": "Tool ini sengaja tidak menebak-nebak kalau halaman gagal diambil. Daripada melaporkan \"title tidak ditemukan\" padahal halamannya tidak pernah berhasil dibaca, kami tampilkan satu banner yang menjelaskan kenapa pemeriksaan konten dilewati sepenuhnya — bukan dianggap gagal, tapi memang tidak pernah dicek.",
+      "items": [
+        {
+          "title": "robots.txt melarang",
+          "body": "robots.txt situs target melarang path ini untuk user-agent yang kamu pilih. Tool tidak melanjutkan pengambilan halaman, sebagai bentuk menghormati aturan itu. Coba ganti user-agent — hasilnya bisa beda kalau situs punya grup aturan terpisah per user-agent."
+        },
+        {
+          "title": "Server menolak (anti-bot)",
+          "body": "Server merespons dengan status yang lazim dipakai untuk menolak request otomatis (misalnya 403, 429, atau 999 milik LinkedIn), bukan halaman aslinya. Ini biasanya berarti situs punya sistem anti-scraping, bukan berarti halamannya bermasalah secara SEO."
+        },
+        {
+          "title": "Error HTTP lain",
+          "body": "Halaman merespons dengan status selain 2xx yang bukan indikasi anti-bot (misalnya 404 atau 500). Perlu dicek langsung apakah halamannya benar-benar bermasalah."
+        },
+        {
+          "title": "Redirect terlalu banyak",
+          "body": "URL me-redirect berkali-kali tanpa pernah sampai ke halaman final. Bisa jadi ada redirect loop yang perlu diperbaiki."
+        },
+        {
+          "title": "Timeout / gagal konek",
+          "body": "Server tidak merespons dalam waktu yang wajar, atau koneksinya gagal (misalnya error SSL atau connection refused)."
+        },
+        {
+          "title": "Domain tidak ditemukan",
+          "body": "Nama domain tidak bisa di-resolve. Cek lagi apakah URL-nya benar atau domainnya masih aktif."
+        }
+      ]
+    },
+    "limits": {
+      "title": "Batasan jumlah audit",
+      "body": "Untuk mencegah penyalahgunaan, jumlah audit per alamat IP dibatasi dalam periode waktu tertentu. Kalau limitnya tercapai, akan muncul pesan untuk mencoba lagi nanti."
+    }
   }
 }

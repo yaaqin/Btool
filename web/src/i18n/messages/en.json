@@ -2,6 +2,7 @@
   "header": {
     "brand": "SEO Audit",
     "tagline": "Raw vs rendered, not a score",
+    "docs": "Docs",
     "theme": {
       "light": "Switch to light theme",
       "dark": "Switch to dark theme"
@@ -49,5 +50,68 @@
     "why": "Why it matters",
     "fix": "How to fix",
     "evidence": "Evidence"
+  },
+  "doc": {
+    "pageTitle": "How to Use This Tool",
+    "backLink": "Back to audit",
+    "intro": {
+      "title": "About this tool",
+      "body": "This tool compares a page's raw HTML against what a crawler can actually read, then builds a list of actionable findings — not a single score. Search ranking depends on many other factors (content relevance, backlinks, domain authority, and more) that can't be measured from one URL, so this tool focuses on technical hygiene instead of promising a search position."
+    },
+    "usage": {
+      "title": "How to use it",
+      "steps": [
+        "Enter the URL of the page you want to check, then click Analyze.",
+        "Pick which user-agent to crawl as: Googlebot or Generic bot (full explanation below).",
+        "On success, you'll see a summary of findings by severity, the raw facts found (title, description, canonical, etc), and a full list of findings with why each matters and how to fix it.",
+        "If the page couldn't be fetched or was blocked, a single explanation banner appears instead of a findings list — see \"When you see a banner\" below."
+      ]
+    },
+    "userAgent": {
+      "title": "Googlebot vs Generic bot",
+      "googlebot": {
+        "title": "Googlebot",
+        "body": "Mimics Googlebot: sends Googlebot's own User-Agent header, and is matched against the site's Googlebot-specific robots.txt group (if one exists). This answers \"can Google crawl this page?\" — the question most people actually want answered."
+      },
+      "generic": {
+        "title": "Generic bot",
+        "body": "Uses this tool's own bot identity, matched against the generic group (User-agent: *) in robots.txt. This answers \"what can a generic crawler, with no special treatment, see?\" — useful when a site's robots.txt treats Googlebot differently from everyone else."
+      },
+      "note": "Results can differ by user-agent, since robots.txt can have different rules per user-agent. Important note: many large sites verify Googlebot's identity via reverse DNS / Google's real IP ranges, not just the User-Agent header — so even with Googlebot selected, a site like LinkedIn can still reject the request. That isn't a bug; that's their security working as designed."
+    },
+    "outcomes": {
+      "title": "When you see a banner instead of a findings list",
+      "intro": "This tool deliberately doesn't guess when a page couldn't be fetched. Rather than report \"title not found\" when the page was never actually read, it shows a single banner explaining why content checks were skipped entirely — not treated as failed, just never checked.",
+      "items": [
+        {
+          "title": "robots.txt disallows it",
+          "body": "The site's robots.txt disallows this path for the user-agent you selected. The tool didn't proceed with fetching the page, out of respect for that rule. Try switching user-agent — results can differ if the site has separate rule groups per user-agent."
+        },
+        {
+          "title": "Server blocked it (anti-bot)",
+          "body": "The server responded with a status commonly used to reject automated requests (e.g. 403, 429, or LinkedIn's own 999), not the real page. This usually means the site has an anti-scraping system, not that the page has an SEO problem."
+        },
+        {
+          "title": "Other HTTP error",
+          "body": "The page responded with a non-2xx status that isn't an anti-bot signal (e.g. 404 or 500). Worth checking directly whether the page is genuinely broken."
+        },
+        {
+          "title": "Too many redirects",
+          "body": "The URL redirected repeatedly without ever reaching a final page. There may be a redirect loop worth fixing."
+        },
+        {
+          "title": "Timeout / connection failed",
+          "body": "The server didn't respond in a reasonable time, or the connection failed (e.g. an SSL error or connection refused)."
+        },
+        {
+          "title": "Domain not found",
+          "body": "The domain name couldn't be resolved. Double-check the URL is correct and the domain is still active."
+        }
+      ]
+    },
+    "limits": {
+      "title": "Audit limits",
+      "body": "To prevent abuse, the number of audits per IP address is limited over a given time window. If you hit the limit, you'll see a message asking you to try again later."
+    }
   }
 }
