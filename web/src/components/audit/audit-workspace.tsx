@@ -6,6 +6,7 @@ import { UserAgentSelector } from "@/components/audit/user-agent-selector";
 import { OutcomeBanner } from "@/components/audit/outcome-banner";
 import { SummaryCards } from "@/components/audit/summary-cards";
 import { FactsPanel } from "@/components/audit/facts-panel";
+import { PageDataPanel } from "@/components/audit/page-data-panel";
 import { FindingsList } from "@/components/audit/findings-list";
 import {
   AuditRequestError,
@@ -92,6 +93,9 @@ export function AuditWorkspace({ dict }: { dict: Dictionary }) {
             statusCode={result.status_code}
             dict={dict}
           />
+          {result.page_data && (
+            <PageDataPanel pageData={result.page_data} dict={dict} />
+          )}
           <FindingsList findings={result.findings} dict={dict} />
         </section>
       )}

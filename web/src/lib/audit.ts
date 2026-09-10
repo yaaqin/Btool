@@ -34,6 +34,26 @@ export interface AuditSummary {
   info: number;
 }
 
+export interface JSONLDBlock {
+  types?: string[];
+  valid: boolean;
+  raw?: unknown;
+}
+
+export interface NextData {
+  present: boolean;
+  format?: string;
+}
+
+export interface PageData {
+  gtm_ids?: string[];
+  ga_ids?: string[];
+  data_layer?: unknown[];
+  data_layer_raw?: string[];
+  json_ld?: JSONLDBlock[];
+  next_data?: NextData;
+}
+
 export interface AuditResult {
   url: string;
   final_url: string;
@@ -45,6 +65,7 @@ export interface AuditResult {
   outcome_message?: string;
   summary: AuditSummary;
   facts?: AuditFacts;
+  page_data?: PageData;
   findings: Finding[];
 }
 

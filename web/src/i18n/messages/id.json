@@ -45,6 +45,19 @@
     },
     "empty": "(tidak ada)"
   },
+  "pageData": {
+    "title": "Data di halaman",
+    "hint": "Dibaca dari HTML mentah — sebelum JavaScript jalan, jadi bukan dataLayer runtime.",
+    "gtm": "Google Tag Manager",
+    "ga": "ID Analytics / Ads",
+    "dataLayer": "dataLayer inline",
+    "dataLayerRawNote": "Tidak bisa di-parse jadi JSON (ini JavaScript) — ditampilkan apa adanya:",
+    "jsonLd": "Structured data (JSON-LD)",
+    "jsonLdInvalid": "tidak valid",
+    "nextData": "Payload framework",
+    "nextDataPresent": "Terdeteksi ({format})",
+    "empty": "Tidak ada yang terdeteksi di HTML mentah."
+  },
   "findings": {
     "title": "Temuan",
     "why": "Kenapa ini penting",

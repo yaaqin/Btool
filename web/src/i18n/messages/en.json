@@ -45,6 +45,19 @@
     },
     "empty": "(none)"
   },
+  "pageData": {
+    "title": "Data on the page",
+    "hint": "Read from the raw HTML — before any JavaScript runs, so not the runtime dataLayer.",
+    "gtm": "Google Tag Manager",
+    "ga": "Analytics / Ads IDs",
+    "dataLayer": "Inline dataLayer",
+    "dataLayerRawNote": "Couldn't parse as JSON (it's JavaScript) — shown as-is:",
+    "jsonLd": "Structured data (JSON-LD)",
+    "jsonLdInvalid": "invalid",
+    "nextData": "Framework payload",
+    "nextDataPresent": "Detected ({format})",
+    "empty": "Nothing detected in the raw HTML."
+  },
   "findings": {
     "title": "Findings",
     "why": "Why it matters",
