@@ -25,6 +25,7 @@ var registry = rules.NewRegistry(
 	rules.CanonicalRule{},
 	rules.RobotsNoindexRule{},
 	rules.RedirectRule{},
+	rules.StructuredDataRule{},
 )
 
 type auditRequest struct {
@@ -43,6 +44,7 @@ type auditResponse struct {
 	OutcomeMessage string         `json:"outcome_message,omitempty"`
 	Summary        report.Summary `json:"summary"`
 	Facts          *auditFacts    `json:"facts,omitempty"`
+	PageData       *pageDataDTO   `json:"page_data,omitempty"`
 	Findings       []findingDTO   `json:"findings"`
 }
 
@@ -51,6 +53,28 @@ type auditFacts struct {
 	Description string `json:"description,omitempty"`
 	Canonical   string `json:"canonical,omitempty"`
 	Robots      string `json:"robots,omitempty"`
+}
+
+// pageDataDTO is what the page exposes in its raw HTML before JavaScript
+// runs — analytics tags, structured data, framework payload markers.
+type pageDataDTO struct {
+	GTMIDs       []string          `json:"gtm_ids,omitempty"`
+	GAIDs        []string          `json:"ga_ids,omitempty"`
+	DataLayer    []json.RawMessage `json:"data_layer,omitempty"`
+	DataLayerRaw []string          `json:"data_layer_raw,omitempty"`
+	JSONLD       []jsonLDDTO       `json:"json_ld,omitempty"`
+	NextData     *nextDataDTO      `json:"next_data,omitempty"`
+}
+
+type jsonLDDTO struct {
+	Types []string        `json:"types,omitempty"`
+	Valid bool            `json:"valid"`
+	Raw   json.RawMessage `json:"raw,omitempty"`
+}
+
+type nextDataDTO struct {
+	Present bool   `json:"present"`
+	Format  string `json:"format,omitempty"`
 }
 
 type findingDTO struct {
@@ -143,10 +167,36 @@ func CreateAudit(w http.ResponseWriter, r *http.Request) {
 			Canonical:   facts.Canonical,
 			Robots:      facts.Robots,
 		},
+		PageData: toPageDataDTO(facts.PageData),
 		Findings: toFindingDTOs(findings),
 	}
 
 	writeJSON(w, http.StatusOK, resp)
+}
+
+// toPageDataDTO returns nil when the page exposed nothing we recognized,
+// so the field is omitted from the response entirely.
+func toPageDataDTO(pd parser.PageData) *pageDataDTO {
+	empty := len(pd.GTMIDs) == 0 && len(pd.GAIDs) == 0 &&
+		len(pd.DataLayer) == 0 && len(pd.DataLayerRaw) == 0 &&
+		len(pd.JSONLD) == 0 && !pd.NextData.Present
+	if empty {
+		return nil
+	}
+
+	dto := &pageDataDTO{
+		GTMIDs:       pd.GTMIDs,
+		GAIDs:        pd.GAIDs,
+		DataLayer:    pd.DataLayer,
+		DataLayerRaw: pd.DataLayerRaw,
+	}
+	for _, b := range pd.JSONLD {
+		dto.JSONLD = append(dto.JSONLD, jsonLDDTO{Types: b.Types, Valid: b.Valid, Raw: b.Raw})
+	}
+	if pd.NextData.Present {
+		dto.NextData = &nextDataDTO{Present: true, Format: pd.NextData.Format}
+	}
+	return dto
 }
 
 // writeOutcome responds with a report describing why content analysis was
