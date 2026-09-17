@@ -119,32 +119,13 @@ func CreateAudit(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), fetcher.Timeout)
 	defer cancel()
 
-	robotsInfo := fetcher.FetchRobotsTxt(ctx, req.URL, ua.HTTPHeader)
-	if !robotsInfo.Allowed(parsedURL.Path, ua.RobotsToken) {
-		writeOutcome(w, req.URL, req.URL, 0, ua, fetcher.OutcomeBlockedByRobots, time.Now(), 0)
+	fo := fetchPage(ctx, req.URL, parsedURL.Path, ua)
+	if fo.Outcome != fetcher.OutcomeOK {
+		writeOutcome(w, req.URL, fo.FinalURL, fo.StatusCode, ua, fo.Outcome, fo.FetchedAt, fo.Duration)
 		return
 	}
 
-	pageResult, fetchErr := fetcher.Fetch(ctx, req.URL, ua.HTTPHeader)
-
-	statusCode := 0
-	finalURL := req.URL
-	fetchedAt := time.Now()
-	var duration time.Duration
-	if pageResult != nil {
-		statusCode = pageResult.StatusCode
-		finalURL = pageResult.FinalURL
-		fetchedAt = pageResult.FetchedAt
-		duration = pageResult.Duration
-	}
-
-	outcome := fetcher.ClassifyOutcome(fetchErr, statusCode)
-	if outcome != fetcher.OutcomeOK {
-		writeOutcome(w, req.URL, finalURL, statusCode, ua, outcome, fetchedAt, duration)
-		return
-	}
-
-	facts, err := parser.Parse(pageResult, req.URL)
+	facts, err := parser.Parse(fo.Result, req.URL)
 	if err != nil {
 		writeError(w, http.StatusBadGateway, "could not parse page HTML")
 		return
