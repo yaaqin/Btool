@@ -19,6 +19,8 @@
   --warning-bg: #fdf5e8;
   --info: #2563eb;
   --info-bg: #eef3ff;
+  --success: #16a34a;
+  --success-bg: #eefdf3;
 }
 
 [data-theme="dark"] {
@@ -38,6 +40,8 @@
   --warning-bg: #2a2010;
   --info: #60a5fa;
   --info-bg: #101c2e;
+  --success: #4ade80;
+  --success-bg: #112a1c;
 }
 
 @theme inline {
@@ -56,6 +60,8 @@
   --color-warning-bg: var(--warning-bg);
   --color-info: var(--info);
   --color-info-bg: var(--info-bg);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

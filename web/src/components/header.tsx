@@ -29,6 +29,12 @@ export function Header({
         </div>
         <div className="flex items-center gap-2">
           <Link
+            href="/metadata"
+            className="rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {dict.header.metadata}
+          </Link>
+          <Link
             href="/doc"
             className="rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >

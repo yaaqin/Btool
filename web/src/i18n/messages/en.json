@@ -3,6 +3,7 @@
     "brand": "SEO Audit",
     "tagline": "Raw vs rendered, not a score",
     "docs": "Docs",
+    "metadata": "Metadata",
     "theme": {
       "light": "Switch to light theme",
       "dark": "Switch to dark theme"
@@ -57,6 +58,26 @@
     "nextData": "Framework payload",
     "nextDataPresent": "Detected ({format})",
     "empty": "Nothing detected in the raw HTML."
+  },
+  "metadataPage": {
+    "hero": {
+      "title": "Extract every metadata tag on a page",
+      "description": "Enter one URL. We read the raw HTML and list every metadata tag we can find, plus how the page uses H1."
+    },
+    "table": {
+      "title": "Metadata tags",
+      "hint": "Read from the raw HTML.",
+      "columnTag": "Tag",
+      "columnValue": "Value",
+      "empty": "-"
+    },
+    "h1": {
+      "title": "H1 heading",
+      "hint": "Exactly one H1 per page is the goal — zero or duplicates both hurt.",
+      "missing": "No H1 found on this page.",
+      "present": "H1 found:",
+      "duplicate": "Duplicate H1 — {count} found on this page:"
+    }
   },
   "findings": {
     "title": "Findings",

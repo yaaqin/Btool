@@ -3,6 +3,7 @@
     "brand": "SEO Audit",
     "tagline": "Raw vs rendered, bukan skor",
     "docs": "Panduan",
+    "metadata": "Metadata",
     "theme": {
       "light": "Ganti ke tema terang",
       "dark": "Ganti ke tema gelap"
@@ -57,6 +58,26 @@
     "nextData": "Payload framework",
     "nextDataPresent": "Terdeteksi ({format})",
     "empty": "Tidak ada yang terdeteksi di HTML mentah."
+  },
+  "metadataPage": {
+    "hero": {
+      "title": "Ekstrak semua metadata tag di sebuah halaman",
+      "description": "Masukkan satu URL. Kami baca HTML mentahnya dan tampilkan semua metadata tag yang ketemu, plus pemakaian H1 di halaman itu."
+    },
+    "table": {
+      "title": "Metadata tags",
+      "hint": "Dibaca dari HTML mentah.",
+      "columnTag": "Tag",
+      "columnValue": "Value",
+      "empty": "-"
+    },
+    "h1": {
+      "title": "Heading H1",
+      "hint": "Idealnya tepat satu H1 per halaman — nol atau duplikat sama-sama masalah.",
+      "missing": "Tidak ada H1 di halaman ini.",
+      "present": "H1 ditemukan:",
+      "duplicate": "H1 duplikat — ditemukan {count} di halaman ini:"
+    }
   },
   "findings": {
     "title": "Temuan",

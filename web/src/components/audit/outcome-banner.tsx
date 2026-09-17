@@ -1,16 +1,25 @@
 import type { Dictionary } from "@/i18n/dictionaries";
-import type { AuditResult } from "@/lib/audit";
+import type { UserAgentChoice } from "@/lib/audit";
 
 const UA_LABEL_KEY = {
   googlebot: "userAgentGooglebot",
   generic: "userAgentGeneric",
 } as const;
 
+// Narrower than AuditResult/MetadataResult on purpose — this is the only
+// slice of either result type the banner actually reads, so both fit here
+// without one importing the other's type.
+interface OutcomeResult {
+  user_agent: UserAgentChoice;
+  outcome_message?: string;
+  status_code?: number;
+}
+
 export function OutcomeBanner({
   result,
   dict,
 }: {
-  result: AuditResult;
+  result: OutcomeResult;
   dict: Dictionary;
 }) {
   const uaLabel = dict.hero[UA_LABEL_KEY[result.user_agent]];

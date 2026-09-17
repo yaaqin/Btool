@@ -82,3 +82,22 @@ export function InfoIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function CheckCircleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="8 12.5 10.7 15 16 9" />
+    </svg>
+  );
+}
+
+export function XCircleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="9" y1="9" x2="15" y2="15" />
+      <line x1="15" y1="9" x2="9" y2="15" />
+    </svg>
+  );
+}
