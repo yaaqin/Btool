@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
+import { SideNav } from "@/components/side-nav";
 import { getDictionary } from "@/i18n/dictionaries";
 import { getRequestLocale } from "@/i18n/locale";
 import { getRequestTheme } from "@/i18n/theme";
@@ -35,6 +36,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <Header dict={dict} locale={locale} theme={theme} />
+        <SideNav dict={dict} />
         <main className="flex flex-1 flex-col">{children}</main>
       </body>
     </html>

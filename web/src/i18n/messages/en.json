@@ -3,6 +3,7 @@
     "brand": "SEO Audit",
     "tagline": "Raw vs rendered, not a score",
     "docs": "Docs",
+    "crawler": "Crawler",
     "metadata": "Metadata",
     "theme": {
       "light": "Switch to light theme",
