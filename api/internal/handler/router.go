@@ -14,5 +14,6 @@ func NewRouter(limiter *ratelimit.Limiter, pool *pgxpool.Pool) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", HealthCheck(pool))
 	mux.HandleFunc("POST /api/v1/audits", CreateAudit)
+	mux.HandleFunc("POST /api/v1/metadata", CreateMetadataReport)
 	return withCORS(limiter.Middleware(mux))
 }
