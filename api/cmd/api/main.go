@@ -10,6 +10,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 
+	"github.com/yaaqin/builder-tool/internal/auth"
 	"github.com/yaaqin/builder-tool/internal/db"
 	"github.com/yaaqin/builder-tool/internal/handler"
 	"github.com/yaaqin/builder-tool/internal/ratelimit"
@@ -28,6 +29,11 @@ func main() {
 
 	limiter := ratelimit.New(ratelimit.ConfigFromEnv())
 
+	gate := auth.NewGateFromEnv()
+	if !gate.Enabled() {
+		log.Println("METADATA_PASSWORD not set, the metadata report stays locked")
+	}
+
 	pool := connectDB()
 	if pool != nil {
 		defer pool.Close()
@@ -35,7 +41,7 @@ func main() {
 
 	addr := ":" + port
 	log.Printf("api listening on %s", addr)
-	if err := http.ListenAndServe(addr, handler.NewRouter(limiter, pool)); err != nil {
+	if err := http.ListenAndServe(addr, handler.NewRouter(limiter, gate, pool)); err != nil {
 		log.Fatal(err)
 	}
 }

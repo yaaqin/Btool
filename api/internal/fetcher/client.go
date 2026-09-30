@@ -23,9 +23,13 @@ type FetchResult struct {
 	FinalURL     string
 	StatusCode   int
 	RedirectHops []string
-	Body         []byte
-	FetchedAt    time.Time
-	Duration     time.Duration
+	// XRobotsTag holds every X-Robots-Tag header on the final response —
+	// robots directives can be sent this way instead of (or as well as)
+	// a <meta name="robots"> tag, so reading only the HTML would miss them.
+	XRobotsTag []string
+	Body       []byte
+	FetchedAt  time.Time
+	Duration   time.Duration
 }
 
 // Fetch validates rawURL, performs the HTTP GET, and returns the body
@@ -75,6 +79,7 @@ func Fetch(ctx context.Context, rawURL string, userAgentHeader string) (*FetchRe
 		FinalURL:     resp.Request.URL.String(),
 		StatusCode:   resp.StatusCode,
 		RedirectHops: hops,
+		XRobotsTag:   resp.Header.Values("X-Robots-Tag"),
 		Body:         body,
 		FetchedAt:    fetchedAt,
 		Duration:     time.Since(fetchedAt),

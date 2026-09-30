@@ -1,0 +1,17 @@
+{
+  "name": "btool-render",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Headless-Chromium render service for the SEO audit API (fase 2).",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}

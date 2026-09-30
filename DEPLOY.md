@@ -29,7 +29,13 @@ PORT=9721
 RATE_LIMIT_MAX=3
 RATE_LIMIT_WINDOW=4h
 CORS_ORIGIN=https://your-frontend.vercel.app
+METADATA_PASSWORD=<a long password only you know>
 ```
+
+`METADATA_PASSWORD` locks the metadata page (it drives a headless browser, so
+it's too heavy to leave public). A correct password unlocks it for 1 hour.
+Without it the metadata endpoint refuses every request. Restarting the API
+logs everyone out.
 
 `CORS_ORIGIN` must be the frontend's real production URL (Vercel gives you
 one after the first deploy — a custom domain later, or the default

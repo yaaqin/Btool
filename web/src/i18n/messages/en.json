@@ -5,6 +5,7 @@
     "docs": "Docs",
     "crawler": "Crawler",
     "metadata": "Metadata",
+    "caseStudy": "Astra Otoshop",
     "theme": {
       "light": "Switch to light theme",
       "dark": "Switch to dark theme"
@@ -63,13 +64,35 @@
   "metadataPage": {
     "hero": {
       "title": "Extract every metadata tag on a page",
-      "description": "Enter one URL. We read the raw HTML and list every metadata tag we can find, plus how the page uses H1."
+      "description": "Enter one URL. We read the raw HTML, render the page in headless Chromium, and list every metadata tag side by side — plus HTTP status, redirects, X-Robots-Tag, and H1 usage."
+    },
+    "loading": "Fetching raw HTML and rendering the page in headless Chromium… this can take up to 30 seconds.",
+    "http": {
+      "title": "HTTP response",
+      "hint": "What the server sent before any HTML.",
+      "status": "Status",
+      "raw": "raw fetch",
+      "rendered": "rendered",
+      "redirects": "Redirect chain",
+      "noRedirects": "No redirects.",
+      "noXRobotsTag": "No X-Robots-Tag header."
     },
     "table": {
       "title": "Metadata tags",
-      "hint": "Read from the raw HTML.",
+      "hint": "Read from the raw HTML — the page as served to the selected User-Agent, before any JavaScript runs.",
+      "hintCompared": "Raw HTML = the page as served to the selected User-Agent, before any JavaScript runs (what social previews and most AI crawlers see). Rendered = the DOM after headless Chromium ran the page's JavaScript — close to Google's second-stage render, but not a guarantee of what Google indexes.",
+      "renderDisabled": "Rendering isn't configured on this server, so only the raw HTML column is shown.",
+      "renderFailed": "Rendering failed ({error}), so only the raw HTML column is shown.",
       "columnTag": "Tag",
       "columnValue": "Value",
+      "columnRaw": "Raw HTML",
+      "columnRendered": "Rendered (JS)",
+      "diffJsOnly": "Only after JavaScript",
+      "diffChanged": "Changed by JavaScript",
+      "issues": {
+        "incomplete": "Companion tags (og:image:*) are set but this tag is empty — incomplete setup.",
+        "invalid_json_ld": "At least one JSON-LD block isn't valid JSON and was skipped."
+      },
       "empty": "-"
     },
     "h1": {
@@ -78,6 +101,19 @@
       "missing": "No H1 found on this page.",
       "present": "H1 found:",
       "duplicate": "Duplicate H1 — {count} found on this page:"
+    },
+    "gate": {
+      "title": "Password required",
+      "description": "This page renders pages in a headless browser, so it's locked. Enter the password to unlock it for 1 hour.",
+      "placeholder": "Password",
+      "cta": "Unlock",
+      "ctaLoading": "Checking…",
+      "wrongPassword": "Wrong password.",
+      "tooManyAttempts": "Too many attempts. Try again in 15 minutes.",
+      "notConfigured": "No password is set on the server (METADATA_PASSWORD), so this page stays locked.",
+      "expired": "Your session expired — enter the password again.",
+      "unlockedUntil": "Unlocked until {time}",
+      "lock": "Lock"
     }
   },
   "findings": {

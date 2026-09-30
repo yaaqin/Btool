@@ -1,14 +1,29 @@
 import { CheckCircleIcon, XCircleIcon } from "@/components/icons";
 import type { Dictionary } from "@/i18n/dictionaries";
 
-export function H1Check({ h1s, dict }: { h1s: string[]; dict: Dictionary }) {
+export function H1Check({
+  h1s,
+  source,
+  dict,
+}: {
+  h1s: string[];
+  // Which DOM these H1s came from ("Raw HTML" / "Rendered"), shown next
+  // to the title when both are displayed.
+  source?: string;
+  dict: Dictionary;
+}) {
   const t = dict.metadataPage.h1;
   const ok = h1s.length === 1;
 
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-sm font-semibold">{t.title}</h2>
+        <h2 className="text-sm font-semibold">
+          {t.title}
+          {source && (
+            <span className="ml-2 font-normal text-muted-foreground">· {source}</span>
+          )}
+        </h2>
         <p className="text-xs text-muted-foreground">{t.hint}</p>
       </div>
 

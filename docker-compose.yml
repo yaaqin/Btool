@@ -8,4 +8,21 @@ services:
       - "127.0.0.1:9721:9721"
     env_file:
       - ./api/.env
+    environment:
+      RENDER_SERVICE_URL: http://btool-render:9723
+    depends_on:
+      - btool-render
+    restart: unless-stopped
+
+  # Headless Chromium for the "rendered" column of the metadata report.
+  # No ports: only btool-api talks to it, over the compose network.
+  btool-render:
+    container_name: btool-render
+    build:
+      context: ./render-service
+      dockerfile: Dockerfile
+    init: true
+    environment:
+      RENDER_MAX_CONCURRENT: "2"
+    mem_limit: 1g
     restart: unless-stopped

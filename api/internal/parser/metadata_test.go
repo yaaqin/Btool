@@ -104,3 +104,32 @@ func TestExtractMetadata_H1Count(t *testing.T) {
 		})
 	}
 }
+
+func TestExtractMetadata_LangHreflangOGURLAndJSONLD(t *testing.T) {
+	html := `<!doctype html>
+<html lang="id"><head>
+<meta property="og:url" content="https://example.com/page">
+<link rel="alternate" hreflang="id" href="/page">
+<link rel="alternate" hreflang="en" href="https://example.com/en/page">
+<script type="application/ld+json">{"@type": "Organization"}</script>
+<script type="application/ld+json">[{"@type": "WebSite"}, {"name": "no type"}]</script>
+<script type="application/ld+json">{not json</script>
+</head><body></body></html>`
+
+	md := extractMetadataFromHTML(t, html)
+
+	cases := map[string]string{
+		"html lang": "id",
+		"hreflang":  "id: https://example.com/page\nen: https://example.com/en/page",
+		"og:url":    "https://example.com/page",
+		"json-ld":   "Organization, WebSite",
+	}
+	for tag, want := range cases {
+		if got := tagValue(t, md, tag); got != want {
+			t.Errorf("tag %q = %q, want %q", tag, got, want)
+		}
+	}
+	if md.InvalidJSONLD != 1 {
+		t.Errorf("InvalidJSONLD = %d, want 1", md.InvalidJSONLD)
+	}
+}
