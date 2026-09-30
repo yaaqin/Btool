@@ -35,6 +35,12 @@ export function Header({
             {dict.header.metadata}
           </Link>
           <Link
+            href="/astra-otoshop"
+            className="hidden rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
+          >
+            {dict.header.caseStudy}
+          </Link>
+          <Link
             href="/doc"
             className="rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
