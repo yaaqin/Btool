@@ -89,6 +89,7 @@ export const descriptionPatterns = {
     "Cari {kategori} [{Brand}] untuk {kendaraan}? Pilih [N+] {kategori} original sesuai spesifikasi, bergaransi resmi, mulai {minPrice}.",
   categoryBrand:
     "Beli {kategori} {Brand} original. [N+ pilihan | Pilihan] bergaransi resmi, mulai {minPrice}.",
-  brand: "Belanja produk {Brand} original untuk mobil dan motor. Bergaransi resmi, mulai {minPrice}.",
+  brand:
+    "Belanja produk {Brand} original untuk mobil dan motor. [N+ pilihan bergaransi resmi | Bergaransi resmi], mulai {minPrice}.",
   search: `Hasil pencarian untuk {query}. Temukan produk dan sparepart original pilihan terbaik dengan garansi resmi hanya di ${SITE_NAME}.`,
 };

@@ -224,7 +224,7 @@
         },
         {
           "title": "9. Susun description",
-          "body": "Salah satu dari enam template (tabel di bawah), juga dipilih dari entitas canonical. Template Kendaraan dan Kategori + Brand menampilkan jumlah stok tersedia yang dibulatkan ke bawah ke 20+, 50+, 100+, 150+, lalu kelipatan 50; kalau stok tersedia 20 atau kurang, angkanya dihilangkan. Mulai halaman 2, \" (Halaman N)\" ditambahkan di akhir."
+          "body": "Salah satu dari enam template (tabel di bawah), juga dipilih dari entitas canonical. Template Kendaraan, Kategori + Brand, dan Brand menampilkan jumlah stok tersedia yang dibulatkan ke bawah ke 20+, 50+, 100+, 150+, lalu kelipatan 50; kalau stok tersedia 20 atau kurang, angkanya dihilangkan. Mulai halaman 2, \" (Halaman N)\" ditambahkan di akhir."
         }
       ],
       "templatesTitle": "Template",

@@ -355,6 +355,9 @@ export function resolveExpected(
   const brandName = brand ? (brands[brand] ?? humanize(brand)) : undefined;
   const catLower = (catName ?? "Sparepart").toLowerCase();
 
+  // In-stock count shown as "N+ pilihan" on brand/vehicle descriptions.
+  const bucket = choiceBucket(inStock);
+
   let kind: PageKind;
   let level = 0;
   let titleWords: string[];
@@ -372,7 +375,8 @@ export function resolveExpected(
     kind = "brand";
     titleWords = ["Jual", "Produk", brandName, "Berkualitas", "Original"];
     titleTemplate = "brand";
-    description = `Belanja produk ${brandName} original untuk mobil dan motor. Bergaransi resmi, mulai ${price}.`;
+    const choices = bucket ? `${bucket}+ pilihan bergaransi resmi` : "Bergaransi resmi";
+    description = `Belanja produk ${brandName} original untuk mobil dan motor. ${choices}, mulai ${price}.`;
     descriptionTemplate = "brand";
   } else {
     kind = category ? "leveling" : "vehicle";
@@ -382,7 +386,6 @@ export function resolveExpected(
     );
     titleTemplate = "leveling";
 
-    const bucket = choiceBucket(inStock);
     if (vehicleName) {
       const choices = bucket ? `${bucket}+ ${catLower}` : catLower;
       description = `Cari ${catLower}${brandName ? ` ${brandName}` : ""} untuk ${vehicleName.toLowerCase()}? Pilih ${choices} original sesuai spesifikasi, bergaransi resmi, mulai ${price}.`;

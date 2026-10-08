@@ -224,7 +224,7 @@
         },
         {
           "title": "9. Build the description",
-          "body": "One of six templates (table below), also chosen from the canonical entities. The Vehicle and Category + Brand templates show the in-stock count rounded down to 20+, 50+, 100+, 150+, then every 50; with 20 or fewer in stock the number is left out. From page 2 on, \" (Halaman N)\" is appended."
+          "body": "One of six templates (table below), also chosen from the canonical entities. The Vehicle, Category + Brand and Brand templates show the in-stock count rounded down to 20+, 50+, 100+, 150+, then every 50; with 20 or fewer in stock the number is left out. From page 2 on, \" (Halaman N)\" is appended."
         }
       ],
       "templatesTitle": "Templates",
