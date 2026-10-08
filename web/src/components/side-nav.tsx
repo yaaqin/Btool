@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SearchIcon, TagIcon } from "@/components/icons";
+import { SearchIcon, SlidersIcon, TagIcon } from "@/components/icons";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 const LINKS = [
   { href: "/", icon: SearchIcon, labelKey: "crawler" } as const,
   { href: "/metadata", icon: TagIcon, labelKey: "metadata" } as const,
+  { href: "/seo-development", icon: SlidersIcon, labelKey: "seoDevelopment" } as const,
 ];
 
 // Fixed, vertically centered on the right edge — a quick way to jump
