@@ -10,7 +10,8 @@ export const SITE_NAME = "Astra Otopart";
 
 // Known slugs. A path segment is classified as vehicle or brand by looking
 // it up here, which is how /products/aki/gs-astra (brand) is told apart
-// from /products/aki/toyota-avanza (vehicle).
+// from /products/aki/mobil (vehicle type). Only mobil/motor for now;
+// specific models (e.g. toyota-avanza) come later.
 export const categories: Record<string, string> = {
   aki: "Aki",
   oli: "Oli",
@@ -20,11 +21,8 @@ export const categories: Record<string, string> = {
 };
 
 export const vehicles: Record<string, string> = {
-  "toyota-avanza": "Toyota Avanza",
-  "toyota-innova": "Toyota Innova",
-  "daihatsu-xenia": "Daihatsu Xenia",
-  "honda-beat": "Honda Beat",
-  "yamaha-nmax": "Yamaha NMAX",
+  mobil: "Mobil",
+  motor: "Motor",
 };
 
 export const brands: Record<string, string> = {
@@ -52,7 +50,7 @@ export const initialResponse = {
   topBrands: "GS Astra, Incoe",
 };
 
-export const initialPath = "/products/aki/toyota-avanza";
+export const initialPath = "/products/aki/mobil";
 
 // Paths from the case-scenario sheet, one click away.
 export const examplePaths = [
@@ -60,10 +58,11 @@ export const examplePaths = [
   "/products?page=2",
   "/products/aki",
   "/products/aki/gs-astra",
-  "/products/aki/toyota-avanza",
-  "/products/aki/toyota-avanza/gs-astra",
-  "/products/aki/toyota-avanza?page=2&sort=terlaris",
-  "/products/aki/gs-astra?vehicle=toyota-avanza",
+  "/products/aki/mobil",
+  "/products/aki/motor",
+  "/products/aki/mobil/gs-astra",
+  "/products/aki/mobil?page=2&sort=terlaris",
+  "/products/aki/gs-astra?vehicle=mobil",
   "/products/aki?brand=incoe",
   "/products/aki?brand=incoe,gs-astra",
   "/products?brand=incoe",

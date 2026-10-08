@@ -349,7 +349,7 @@ export function resolveExpected(
     const bucket = choiceBucket(inStock);
     if (vehicleName) {
       const choices = bucket ? `${bucket}+ ${catLower}` : catLower;
-      description = `Cari ${catLower} untuk ${vehicleName}${brandName ? ` ${brandName}` : ""}? Pilih ${choices} original sesuai spesifikasi, bergaransi resmi, mulai ${price}.`;
+      description = `Cari ${catLower}${brandName ? ` ${brandName}` : ""} untuk ${vehicleName.toLowerCase()}? Pilih ${choices} original sesuai spesifikasi, bergaransi resmi, mulai ${price}.`;
       descriptionTemplate = "Kendaraan";
     } else if (brandName) {
       const choices = bucket ? `${bucket}+ pilihan` : "Pilihan";
