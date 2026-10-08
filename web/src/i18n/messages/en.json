@@ -243,6 +243,8 @@
     },
     "path": {
       "title": "Path",
+      "copy": "Copy",
+      "copied": "Copied",
       "examples": "Examples from the case scenario",
       "errors": {
         "mustStartWithSlash": "The path must start with /",

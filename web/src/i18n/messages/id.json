@@ -243,6 +243,8 @@
     },
     "path": {
       "title": "Path",
+      "copy": "Salin",
+      "copied": "Tersalin",
       "examples": "Contoh dari case skenario",
       "errors": {
         "mustStartWithSlash": "Path harus diawali dengan /",

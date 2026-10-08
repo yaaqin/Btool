@@ -56,6 +56,11 @@ export function SeoDevelopmentWorkspace({
   const t = dict.seoDevelopmentPage;
   const [draft, setDraft] = useState<ResponseDraft>(INITIAL_DRAFT);
   const [path, setPath] = useState(initialPath);
+  // What's typed in the page field while it has focus. The page itself
+  // lives in the path, so without this the field can't be cleared: an
+  // empty value means page 1 and would snap straight back to "1".
+  const [pageDraft, setPageDraft] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const response = {
     totalProducts: toCount(draft.totalProducts),
@@ -83,8 +88,19 @@ export function SeoDevelopmentWorkspace({
   }
 
   function handlePageChange(value: string) {
+    setPageDraft(value);
     const n = Number(value);
     setPath((p) => setQueryParam(p, "page", Number.isInteger(n) && n > 1 ? String(n) : null));
+  }
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(path);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard blocked (permissions / insecure context): nothing to do.
+    }
   }
 
   function handleSortToggle(value: string) {
@@ -100,15 +116,24 @@ export function SeoDevelopmentWorkspace({
 
       <div className="flex flex-col gap-6">
         <Panel step={1} title={t.path.title}>
-          <input
-            type="text"
-            value={path}
-            onChange={(e) => setPath(e.target.value.trim())}
-            placeholder="/products/aki"
-            spellCheck={false}
-            aria-invalid={Boolean(pathError)}
-            className={`${INPUT_CLASS} font-mono ${pathError ? "border-critical" : ""}`}
-          />
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={path}
+              onChange={(e) => setPath(e.target.value.trim())}
+              placeholder="/products/aki"
+              spellCheck={false}
+              aria-invalid={Boolean(pathError)}
+              className={`${INPUT_CLASS} font-mono ${pathError ? "border-critical" : ""}`}
+            />
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="shrink-0 rounded-lg border border-border px-3 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              {copied ? t.path.copied : t.path.copy}
+            </button>
+          </div>
           {pathError && <p className="mt-2 text-xs text-critical">{t.path.errors[pathError]}</p>}
           <p className="mt-4 text-xs font-semibold text-muted-foreground">{t.path.examples}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -156,9 +181,10 @@ export function SeoDevelopmentWorkspace({
             <NumberField
               label="page"
               hint={t.response.pageHint}
-              value={String(page)}
+              value={pageDraft ?? String(page)}
               min={1}
               onChange={handlePageChange}
+              onBlur={() => setPageDraft(null)}
             />
             <NumberField
               label="minPrice"
@@ -346,12 +372,14 @@ function NumberField({
   value,
   min = 0,
   onChange,
+  onBlur,
 }: {
   label: string;
   hint?: string;
   value: string;
   min?: number;
   onChange: (value: string) => void;
+  onBlur?: () => void;
 }) {
   return (
     <label className="flex flex-col gap-1.5">
@@ -362,6 +390,10 @@ function NumberField({
         min={min}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
+        // A focused number input changes its value on mouse wheel; drop
+        // focus instead so scrolling the page never edits the field.
+        onWheel={(e) => e.currentTarget.blur()}
         className={`${INPUT_CLASS} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
       />
       {hint && <span className="text-[11px] text-muted-foreground">{hint}</span>}
