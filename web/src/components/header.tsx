@@ -14,7 +14,7 @@ export function Header({
   theme: Theme;
 }) {
   return (
-    <header className="border-b border-border bg-card/60 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-border bg-card/60 backdrop-blur">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <div className="flex items-center gap-2.5">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">

@@ -95,7 +95,7 @@ export default async function DocPage() {
 
       <section
         id="seo-development"
-        className="scroll-mt-6 rounded-2xl border border-border bg-card p-6 shadow-sm"
+        className="scroll-mt-24 rounded-2xl border border-border bg-card p-6 shadow-sm"
       >
         <h2 className="text-sm font-semibold">
           <Link href="/seo-development" className="hover:underline">
