@@ -212,7 +212,7 @@
         },
         {
           "title": "6. Tentukan index / noindex",
-          "body": "Hanya kalau canonical sama dengan path yang diketik (self). Index jika total produk ≥ batas minimum (default 3) dan persentase stok tersedia ≥ batas minimum (default 50%), selain itu noindex. Kalau canonical mengarah ke URL lain, URL tersebut varian dan robots-nya \"-\": tidak punya tag robots sendiri, ikut canonical. Follow selalu aktif."
+          "body": "Hanya kalau canonical sama dengan path yang diketik (self). Index jika total produk ≥ batas minimum (default 3) dan persentase stok tersedia ≥ batas minimum (default 50%), selain itu noindex. Kalau canonical mengarah ke URL lain, URL tersebut varian dan robots-nya \"-\": no meta robots sama sekali (bukan tag follow saja, karena tanpa tag default-nya sudah index, follow), cukup canonical. Selain itu follow selalu aktif."
         },
         {
           "title": "7. Internal link",
@@ -269,7 +269,7 @@
       "noLengthLimit": "tanpa batas panjang",
       "dropped": "dihapus: {words}",
       "robots": "Robots",
-      "robotsUnset": "tidak di-set, ikut canonical",
+      "robotsUnset": "no meta robots (default index, follow), ikut canonical",
       "internalLink": "Render internal link",
       "canonical": "Canonical",
       "notes": "Alasan",

@@ -287,7 +287,7 @@ export function SeoDevelopmentWorkspace({
               <Field label={t.expected.robots}>
                 <div className="flex items-center gap-2">
                   <IndexBadge status={expected.index} />
-                  <Badge tone="success">{expected.follow}</Badge>
+                  {expected.index !== "-" && <Badge tone="success">{expected.follow}</Badge>}
                 </div>
                 <code className="mt-2 block font-mono text-xs text-muted-foreground">
                   {expected.index === "-"

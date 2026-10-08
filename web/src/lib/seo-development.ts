@@ -26,7 +26,7 @@ export type ListingResponse = {
   topBrands: string;
 };
 
-// "-" = no robots decision of its own: the URL is a variant and defers to
+// "-" = no meta robots at all: the URL is a variant and defers to
 // its canonical (same as the case-scenario sheet).
 export type IndexStatus = "index" | "noindex" | "-";
 

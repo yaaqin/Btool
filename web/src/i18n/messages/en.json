@@ -212,7 +212,7 @@
         },
         {
           "title": "6. Decide index / noindex",
-          "body": "Only when the canonical equals the typed path (self). It's index when total products ≥ the minimum (default 3) and the in-stock share ≥ the minimum (default 50%), otherwise noindex. When the canonical points elsewhere the URL is a variant and robots is \"-\": no robots tag of its own, it follows the canonical. Follow is always on."
+          "body": "Only when the canonical equals the typed path (self). It's index when total products ≥ the minimum (default 3) and the in-stock share ≥ the minimum (default 50%), otherwise noindex. When the canonical points elsewhere the URL is a variant and robots is \"-\": no meta robots at all (not a lone follow tag, since without a tag the default is already index, follow), just the canonical. Otherwise follow is always on."
         },
         {
           "title": "7. Internal links",
@@ -269,7 +269,7 @@
       "noLengthLimit": "no length limit",
       "dropped": "removed: {words}",
       "robots": "Robots",
-      "robotsUnset": "not set, follows canonical",
+      "robotsUnset": "no meta robots (defaults to index, follow), follows canonical",
       "internalLink": "Render internal link",
       "canonical": "Canonical",
       "notes": "Why",
