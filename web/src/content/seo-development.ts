@@ -70,3 +70,25 @@ export const examplePaths = [
   "/products?search=aki",
   "/products/tidak-ada",
 ];
+
+// Human-readable shape of each template, shown on /doc. Indonesian in every
+// locale: these are the site's own wording. Keep in sync with
+// resolveExpected in lib/seo-development.ts.
+export const titlePatterns = {
+  products: `Produk Otomotif Original | ${SITE_NAME}`,
+  brand: `Jual Produk {Brand} Berkualitas Original | ${SITE_NAME}`,
+  leveling: `Jual {Kategori} {Kendaraan} {Brand} Berkualitas Original | ${SITE_NAME}`,
+  search: `Pencarian {query} | ${SITE_NAME}`,
+};
+
+export const descriptionPatterns = {
+  products: `Temukan produk dan sparepart original pilihan terbaik dengan garansi resmi hanya di ${SITE_NAME}.`,
+  category:
+    "Belanja {kategori} original untuk mobil dan motor: {topBrands}, dan lainnya. Bergaransi resmi, mulai {minPrice}.",
+  vehicle:
+    "Cari {kategori} [{Brand}] untuk {kendaraan}? Pilih [N+] {kategori} original sesuai spesifikasi, bergaransi resmi, mulai {minPrice}.",
+  categoryBrand:
+    "Beli {kategori} {Brand} original. [N+ pilihan | Pilihan] bergaransi resmi, mulai {minPrice}.",
+  brand: "Belanja produk {Brand} original untuk mobil dan motor. Bergaransi resmi, mulai {minPrice}.",
+  search: `Hasil pencarian untuk {query}. Temukan produk dan sparepart original pilihan terbaik dengan garansi resmi hanya di ${SITE_NAME}.`,
+};

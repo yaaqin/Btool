@@ -184,6 +184,136 @@
     "limits": {
       "title": "Batasan jumlah audit",
       "body": "Untuk mencegah penyalahgunaan, jumlah audit per alamat IP dibatasi dalam periode waktu tertentu. Kalau limitnya tercapai, akan muncul pesan untuk mencoba lagi nanti."
+    },
+    "seoDevelopment": {
+      "title": "SEO Development: cara expected dibentuk",
+      "intro": "Halaman SEO Development menerima path /products dan response listing tiruan (total produk, jumlah out of stock, harga termurah, brand teratas), lalu menghitung apa yang seharusnya dikirim halaman tersebut. Aturan di bawah dijalankan berurutan; aturan pertama yang menentukan sesuatu yang dipakai. Title dan description yang dihasilkan selalu berbahasa Indonesia karena itu konten situsnya.",
+      "flowTitle": "Alur",
+      "flow": [
+        {
+          "title": "1. Validasi path",
+          "body": "Path wajib diawali / dan /products. Selain itu muncul error dan tidak ada hasil."
+        },
+        {
+          "title": "2. Search diproses duluan",
+          "body": "Kalau ada query ?search=, halaman dianggap hasil pencarian: canonical ke /products, robots \"-\" (ikut canonical), tanpa internal link, dan title tanpa batas panjang. Aturan di bawahnya tidak berlaku."
+        },
+        {
+          "title": "3. Baca path",
+          "body": "Segment setelah /products dibaca sebagai /products/{kategori}/{kendaraan}/{brand}. Segment pertama adalah kategori; segment berikutnya diklasifikasi dari daftar slug yang dikenal (kendaraan: mobil, motor; brand: gs-astra, incoe, …). Segment yang tidak dikenal diabaikan dengan catatan, lebih dari 3 segment dipotong, dan brand sebelum kendaraan ditandai sebagai urutan salah."
+        },
+        {
+          "title": "4. Gabungkan filter dari query",
+          "body": "?category=, ?vehicle=, dan ?brand= digabung dengan path. Kategori dari query hanya dipakai kalau path belum punya kategori. Param lain (utm, dll.) diabaikan."
+        },
+        {
+          "title": "5. Tentukan canonical",
+          "body": "Canonical adalah satu URL resmi untuk kombinasi tersebut: /products/{kategori}/{kendaraan}/{brand}, atau /products?brand=… / /products?vehicle=… kalau tidak ada kategori. ?page=N dipertahankan mulai halaman 2; sort dan page=1 dibuang. Filter dengan beberapa nilai (brand=a,b), atau brand + kendaraan tanpa kategori, tidak punya PLP: robots noindex, canonical ke PLP terdekat."
+        },
+        {
+          "title": "6. Tentukan index / noindex",
+          "body": "Hanya kalau canonical sama dengan path yang diketik (self). Index jika total produk ≥ batas minimum (default 3) dan persentase stok tersedia ≥ batas minimum (default 50%), selain itu noindex. Kalau canonical mengarah ke URL lain, URL tersebut varian dan robots-nya \"-\": tidak punya tag robots sendiri, ikut canonical. Follow selalu aktif."
+        },
+        {
+          "title": "7. Internal link",
+          "body": "true hanya untuk halaman leveling (ada kategori) atau kalau ada filter brand. /products, halaman kendaraan saja, dan search bernilai false."
+        },
+        {
+          "title": "8. Susun title",
+          "body": "Template dipilih dari entitas canonical (tabel di bawah). Mulai halaman 2, \" Halaman N\" disisipkan sebelum \" | Astra Otopart\". Kalau title lebih panjang dari batas (default 60), kata \"Berkualitas\" dihapus dulu, lalu \"Jual\". Title search dikecualikan."
+        },
+        {
+          "title": "9. Susun description",
+          "body": "Salah satu dari enam template (tabel di bawah), juga dipilih dari entitas canonical. Template Kendaraan dan Kategori + Brand menampilkan jumlah stok tersedia yang dibulatkan ke bawah ke 20+, 50+, 100+, 150+, lalu kelipatan 50; kalau stok tersedia 20 atau kurang, angkanya dihilangkan. Mulai halaman 2, \" (Halaman N)\" ditambahkan di akhir."
+        }
+      ],
+      "templatesTitle": "Template",
+      "titleTemplatesLabel": "Meta title",
+      "descriptionTemplatesLabel": "Meta description",
+      "columnTemplate": "Template",
+      "columnPattern": "Pola",
+      "configNote": "Batas-batas di atas diambil dari env server dan dibaca per request (cukup restart, tanpa rebuild): SEO_DEV_TITLE_MAX_LENGTH (default 60), SEO_DEV_MIN_PRODUCTS (default 3), SEO_DEV_MIN_IN_STOCK_PERCENT (default 50)."
+    }
+  },
+  "seoDevelopmentPage": {
+    "metaDescription": "Simulasi title, description, robots, canonical, dan internal link untuk halaman /products Astra Otopart.",
+    "hero": {
+      "title": "SEO Development",
+      "description": "Simulasi output SEO halaman /products: atur response listing, ketik path, lalu lihat title, description, robots, canonical, dan internal link yang seharusnya dikirim."
+    },
+    "path": {
+      "title": "Path",
+      "examples": "Contoh dari case skenario",
+      "errors": {
+        "mustStartWithSlash": "Path harus diawali dengan /",
+        "productsOnly": "Hanya path /products yang didukung (contoh: /products/aki)"
+      }
+    },
+    "response": {
+      "title": "Response (state terkini)",
+      "reset": "Reset",
+      "pageHint": "mengubah ?page= di path",
+      "inStock": "In stock: {inStock} dari {total} ({percent}%)",
+      "stockError": "Out of stock tidak boleh lebih besar dari total produk.",
+      "sortTitle": "Urutkan",
+      "sortHint": "mengubah ?sort= di path"
+    },
+    "expected": {
+      "title": "Expected",
+      "empty": "Perbaiki input dulu untuk melihat hasil.",
+      "metaTitle": "Meta title",
+      "metaDescription": "Meta description",
+      "template": "Template {name}",
+      "noLengthLimit": "tanpa batas panjang",
+      "dropped": "dihapus: {words}",
+      "robots": "Robots",
+      "robotsUnset": "tidak di-set, ikut canonical",
+      "internalLink": "Render internal link",
+      "canonical": "Canonical",
+      "notes": "Alasan",
+      "rules": "Aturan: index jika total produk ≥ {minProducts} dan stok tersedia ≥ {minStock}% · title maks {maxTitle} karakter (kecuali search)."
+    },
+    "kinds": {
+      "products": "Products (L0)",
+      "brand": "Brand",
+      "vehicle": "Kendaraan",
+      "search": "Pencarian",
+      "leveling": "Leveling (L{level})"
+    },
+    "titleTemplates": {
+      "products": "Produk",
+      "brand": "Brand",
+      "leveling": "Leveling",
+      "search": "Pencarian"
+    },
+    "descriptionTemplates": {
+      "products": "Produk",
+      "category": "Kategori",
+      "vehicle": "Kendaraan",
+      "categoryBrand": "Kategori + Brand",
+      "brand": "Brand",
+      "search": "Pencarian"
+    },
+    "notes": {
+      "invalidPage": "page={value} tidak valid, dianggap halaman 1.",
+      "unknownSort": "sort={value} bukan opsi sort yang dikenal.",
+      "search": "Ada query search: canonical diarahkan ke /products, batas panjang title tidak berlaku.",
+      "tooManySegments": "Lebih dari 3 segment setelah /products; segment sisanya diabaikan.",
+      "unknownCategory": "Kategori \"{slug}\" tidak dikenal; di production idealnya 404.",
+      "wrongOrder": "Urutan segment salah (seharusnya kategori/kendaraan/brand); idealnya redirect 308.",
+      "unknownSegment": "Segment \"{slug}\" bukan kendaraan atau brand yang dikenal; diabaikan.",
+      "categoryQueryIgnored": "Query category diabaikan karena kategori sudah ada di path.",
+      "categoryQueryPromoted": "category={slug} dipindah ke path /products/{slug}.",
+      "unknownVehicle": "Kendaraan \"{slug}\" tidak dikenal.",
+      "unknownBrand": "Brand \"{slug}\" tidak dikenal.",
+      "multiValue": "Filter dengan lebih dari satu nilai bukan PLP: noindex, canonical ke PLP terdekat.",
+      "comboWithoutCategory": "Brand + kendaraan tanpa kategori bukan PLP: noindex, canonical ke /products.",
+      "indexRule": "Total produk {total} {totalOp} {minProducts}, stok tersedia {stock}% {stockOp} {minStock}% → {index}.",
+      "sortVariant": "Query sort tidak membuat halaman baru; canonical tanpa sort.",
+      "pageOneVariant": "page=1 sama dengan halaman pertama; canonical tanpa page.",
+      "variant": "URL ini varian, status index mengikuti canonical.",
+      "titleWordsDropped": "Title melebihi {max} karakter; kata \"{words}\" dihapus.",
+      "titleStillLong": "Title masih {length} karakter setelah semua kata opsional dihapus."
     }
   }
 }

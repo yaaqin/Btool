@@ -14,8 +14,10 @@ import {
   setQueryParam,
   validatePath,
   type IndexStatus,
+  type Note,
   type Thresholds,
 } from "@/lib/seo-development";
+import type { Dictionary } from "@/i18n/dictionaries";
 
 // Inputs are kept as strings so a field can be cleared while typing
 // without snapping back to 0.
@@ -33,12 +35,25 @@ const INITIAL_DRAFT: ResponseDraft = {
   topBrands: initialResponse.topBrands,
 };
 
+function fill(template: string, params: Record<string, string | number> = {}): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) =>
+    key in params ? String(params[key]) : match
+  );
+}
+
 function toCount(value: string): number {
   const n = Number(value);
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
 }
 
-export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds }) {
+export function SeoDevelopmentWorkspace({
+  thresholds,
+  dict,
+}: {
+  thresholds: Thresholds;
+  dict: Dictionary;
+}) {
+  const t = dict.seoDevelopmentPage;
   const [draft, setDraft] = useState<ResponseDraft>(INITIAL_DRAFT);
   const [path, setPath] = useState(initialPath);
 
@@ -51,7 +66,7 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
   const pathError = validatePath(path);
   const stockError =
     response.outOfStock > response.totalProducts
-      ? "Out of stock tidak boleh lebih besar dari total produk."
+      ? t.response.stockError
       : null;
   const inStock = Math.max(0, response.totalProducts - response.outOfStock);
   const stockPercent =
@@ -79,16 +94,12 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-12">
       <header className="flex flex-col gap-3">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">SEO Development</h1>
-        <p className="max-w-3xl text-muted-foreground sm:text-lg">
-          Simulasi output SEO halaman <code className="font-mono text-base">/products</code>: atur
-          response listing, ketik path, lalu lihat title, description, robots, canonical, dan internal
-          link yang seharusnya dikirim.
-        </p>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{t.hero.title}</h1>
+        <p className="max-w-3xl text-muted-foreground sm:text-lg">{t.hero.description}</p>
       </header>
 
       <div className="flex flex-col gap-6">
-        <Panel step={1} title="Path">
+        <Panel step={1} title={t.path.title}>
           <input
             type="text"
             value={path}
@@ -98,8 +109,8 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
             aria-invalid={Boolean(pathError)}
             className={`${INPUT_CLASS} font-mono ${pathError ? "border-critical" : ""}`}
           />
-          {pathError && <p className="mt-2 text-xs text-critical">{pathError}</p>}
-          <p className="mt-4 text-xs font-semibold text-muted-foreground">Contoh dari case skenario</p>
+          {pathError && <p className="mt-2 text-xs text-critical">{t.path.errors[pathError]}</p>}
+          <p className="mt-4 text-xs font-semibold text-muted-foreground">{t.path.examples}</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {examplePaths.map((p) => (
               <button
@@ -120,14 +131,14 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
 
         <Panel
           step={2}
-          title="Response (state terkini)"
+          title={t.response.title}
           action={
             <button
               type="button"
               onClick={() => setDraft(INITIAL_DRAFT)}
               className="text-xs font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
             >
-              Reset
+              {t.response.reset}
             </button>
           }
         >
@@ -144,7 +155,7 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
             />
             <NumberField
               label="page"
-              hint="mengubah ?page= di path"
+              hint={t.response.pageHint}
               value={String(page)}
               min={1}
               onChange={handlePageChange}
@@ -166,12 +177,17 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
           </div>
           <p className={`mt-3 text-xs ${stockError ? "text-critical" : "text-muted-foreground"}`}>
             {stockError ??
-              `In stock: ${inStock} dari ${response.totalProducts} (${stockPercent}%)`}
+              fill(t.response.inStock, {
+                inStock,
+                total: response.totalProducts,
+                percent: stockPercent,
+              })}
           </p>
 
           <div className="mt-5 border-t border-border/60 pt-4">
             <p className="text-xs font-semibold">
-              Urutkan <span className="font-normal text-muted-foreground">· mengubah ?sort= di path</span>
+              {t.response.sortTitle}{" "}
+              <span className="font-normal text-muted-foreground">· {t.response.sortHint}</span>
             </p>
             <ul className="mt-2 flex flex-col">
               {sortOptions.map((opt) => {
@@ -197,22 +213,22 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
         </Panel>
       </div>
 
-      <Panel step={3} title="Expected">
+      <Panel step={3} title={t.expected.title}>
         {!expected ? (
           <p className="rounded-xl bg-muted p-6 text-center text-sm text-muted-foreground">
-            Perbaiki input dulu untuk melihat hasil.
+            {t.expected.empty}
           </p>
         ) : (
           <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <span className="rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary">
-                {expected.kindLabel}
+                {fill(t.kinds[expected.kind], { level: expected.level })}
               </span>
               <span className="break-all font-mono text-muted-foreground">{path}</span>
             </div>
 
             <Field
-              label="Meta title"
+              label={t.expected.metaTitle}
               meta={
                 <LengthBadge
                   length={expected.title.length}
@@ -222,39 +238,46 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
             >
               <p className="text-base font-medium">{expected.title}</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Template {expected.titleTemplate}
-                {!expected.titleLimitApplies && " · tanpa batas panjang"}
+                {fill(t.expected.template, { name: t.titleTemplates[expected.titleTemplate] })}
+                {!expected.titleLimitApplies && ` · ${t.expected.noLengthLimit}`}
                 {expected.droppedWords.length > 0 &&
-                  ` · dihapus: ${expected.droppedWords.join(", ")}`}
+                  ` · ${fill(t.expected.dropped, { words: expected.droppedWords.join(", ") })}`}
               </p>
             </Field>
 
-            <Field label="Meta description" meta={<LengthBadge length={expected.description.length} max={null} />}>
+            <Field
+              label={t.expected.metaDescription}
+              meta={<LengthBadge length={expected.description.length} max={null} />}
+            >
               <p className="text-sm">{expected.description}</p>
-              <p className="mt-1 text-xs text-muted-foreground">Template {expected.descriptionTemplate}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {fill(t.expected.template, {
+                  name: t.descriptionTemplates[expected.descriptionTemplate],
+                })}
+              </p>
             </Field>
 
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Robots">
+              <Field label={t.expected.robots}>
                 <div className="flex items-center gap-2">
                   <IndexBadge status={expected.index} />
                   <Badge tone="success">{expected.follow}</Badge>
                 </div>
                 <code className="mt-2 block font-mono text-xs text-muted-foreground">
                   {expected.index === "-"
-                    ? "tidak di-set, ikut canonical"
+                    ? t.expected.robotsUnset
                     : `<meta name="robots" content="${expected.index}, ${expected.follow}">`}
                 </code>
               </Field>
 
-              <Field label="Render internal link">
+              <Field label={t.expected.internalLink}>
                 <Badge tone={expected.internalLink ? "success" : "muted"}>
                   {expected.internalLink ? "true" : "false"}
                 </Badge>
               </Field>
             </div>
 
-            <Field label="Canonical">
+            <Field label={t.expected.canonical}>
               <div className="flex flex-wrap items-center gap-2">
                 {expected.canonicalIsSelf && <Badge tone="success">self</Badge>}
                 <code className="break-all font-mono text-sm">{expected.canonical}</code>
@@ -262,25 +285,31 @@ export function SeoDevelopmentWorkspace({ thresholds }: { thresholds: Thresholds
             </Field>
 
             {expected.notes.length > 0 && (
-              <Field label="Alasan">
+              <Field label={t.expected.notes}>
                 <ul className="flex list-disc flex-col gap-1 pl-4 text-xs text-muted-foreground">
-                  {expected.notes.map((note) => (
-                    <li key={note}>{note}</li>
+                  {expected.notes.map((note, i) => (
+                    <li key={i}>{noteText(note, t.notes)}</li>
                   ))}
                 </ul>
               </Field>
             )}
 
             <p className="border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
-              Aturan: index jika total produk ≥ {thresholds.minProducts} dan stok tersedia ≥{" "}
-              {thresholds.minInStockPercent}% · title maks {thresholds.titleMaxLength} karakter
-              (kecuali search).
+              {fill(t.expected.rules, {
+                minProducts: thresholds.minProducts,
+                minStock: thresholds.minInStockPercent,
+                maxTitle: thresholds.titleMaxLength,
+              })}
             </p>
           </div>
         )}
       </Panel>
     </div>
   );
+}
+
+function noteText(note: Note, notes: Dictionary["seoDevelopmentPage"]["notes"]): string {
+  return fill(notes[note.key], note.params);
 }
 
 const INPUT_CLASS =

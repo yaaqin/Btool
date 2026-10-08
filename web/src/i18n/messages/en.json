@@ -184,6 +184,136 @@
     "limits": {
       "title": "Audit limits",
       "body": "To prevent abuse, the number of audits per IP address is limited over a given time window. If you hit the limit, you'll see a message asking you to try again later."
+    },
+    "seoDevelopment": {
+      "title": "SEO Development: how the expected output is built",
+      "intro": "The SEO Development page takes a /products path plus a mocked listing response (total products, out-of-stock count, lowest price, top brands) and works out what the page should serve. The rules below run top to bottom; the first one that decides something wins. The generated title and description are always Indonesian, since they're the site's own content.",
+      "flowTitle": "Flow",
+      "flow": [
+        {
+          "title": "1. Validate the path",
+          "body": "The path must start with / and with /products. Anything else shows an error and no result."
+        },
+        {
+          "title": "2. Search goes first",
+          "body": "If there's a ?search= query, the page is a search result: canonical is /products, robots is \"-\" (follows canonical), no internal links, and the title has no length limit. Nothing below applies."
+        },
+        {
+          "title": "3. Read the path",
+          "body": "Segments after /products are read as /products/{category}/{vehicle}/{brand}. The first segment is the category; the next ones are classified by the known slug lists (vehicle: mobil, motor; brands: gs-astra, incoe, …). Unknown segments are ignored with a note, more than 3 segments are cut off, and brand-before-vehicle is flagged as the wrong order."
+        },
+        {
+          "title": "4. Fold query filters in",
+          "body": "?category=, ?vehicle= and ?brand= are merged with the path. A category from the query only counts when the path has none. Other params (utm, etc.) are ignored."
+        },
+        {
+          "title": "5. Pick the canonical",
+          "body": "The canonical is the one official URL for that combination: /products/{category}/{vehicle}/{brand}, or /products?brand=… / /products?vehicle=… when there's no category. ?page=N is kept from page 2 onward; sort and page=1 are dropped. A filter with several values (brand=a,b), or brand + vehicle without a category, has no PLP: robots noindex, canonical to the nearest real PLP."
+        },
+        {
+          "title": "6. Decide index / noindex",
+          "body": "Only when the canonical equals the typed path (self). It's index when total products ≥ the minimum (default 3) and the in-stock share ≥ the minimum (default 50%), otherwise noindex. When the canonical points elsewhere the URL is a variant and robots is \"-\": no robots tag of its own, it follows the canonical. Follow is always on."
+        },
+        {
+          "title": "7. Internal links",
+          "body": "true only for leveling pages (there's a category) or when a brand filter is present. /products, vehicle-only pages and search get false."
+        },
+        {
+          "title": "8. Build the title",
+          "body": "The template is chosen from the canonical entities (table below). From page 2 on, \" Halaman N\" goes before \" | Astra Otopart\". If the title is longer than the limit (default 60), \"Berkualitas\" is removed first, then \"Jual\". Search titles are exempt."
+        },
+        {
+          "title": "9. Build the description",
+          "body": "One of six templates (table below), also chosen from the canonical entities. The Vehicle and Category + Brand templates show the in-stock count rounded down to 20+, 50+, 100+, 150+, then every 50; with 20 or fewer in stock the number is left out. From page 2 on, \" (Halaman N)\" is appended."
+        }
+      ],
+      "templatesTitle": "Templates",
+      "titleTemplatesLabel": "Meta title",
+      "descriptionTemplatesLabel": "Meta description",
+      "columnTemplate": "Template",
+      "columnPattern": "Pattern",
+      "configNote": "Thresholds come from server env vars, read per request (restart, no rebuild): SEO_DEV_TITLE_MAX_LENGTH (default 60), SEO_DEV_MIN_PRODUCTS (default 3), SEO_DEV_MIN_IN_STOCK_PERCENT (default 50)."
+    }
+  },
+  "seoDevelopmentPage": {
+    "metaDescription": "Simulate the title, description, robots, canonical and internal links for Astra Otopart /products pages.",
+    "hero": {
+      "title": "SEO Development",
+      "description": "Simulates the SEO output of a /products page: set the listing response, type a path, and see the title, description, robots, canonical and internal links the page should serve."
+    },
+    "path": {
+      "title": "Path",
+      "examples": "Examples from the case scenario",
+      "errors": {
+        "mustStartWithSlash": "The path must start with /",
+        "productsOnly": "Only /products paths are supported (e.g. /products/aki)"
+      }
+    },
+    "response": {
+      "title": "Response (current state)",
+      "reset": "Reset",
+      "pageHint": "changes ?page= in the path",
+      "inStock": "In stock: {inStock} of {total} ({percent}%)",
+      "stockError": "Out of stock can't be greater than total products.",
+      "sortTitle": "Sort",
+      "sortHint": "changes ?sort= in the path"
+    },
+    "expected": {
+      "title": "Expected",
+      "empty": "Fix the inputs to see the result.",
+      "metaTitle": "Meta title",
+      "metaDescription": "Meta description",
+      "template": "Template {name}",
+      "noLengthLimit": "no length limit",
+      "dropped": "removed: {words}",
+      "robots": "Robots",
+      "robotsUnset": "not set, follows canonical",
+      "internalLink": "Render internal link",
+      "canonical": "Canonical",
+      "notes": "Why",
+      "rules": "Rules: index when total products ≥ {minProducts} and in stock ≥ {minStock}% · title max {maxTitle} characters (except search)."
+    },
+    "kinds": {
+      "products": "Products (L0)",
+      "brand": "Brand",
+      "vehicle": "Vehicle",
+      "search": "Search",
+      "leveling": "Leveling (L{level})"
+    },
+    "titleTemplates": {
+      "products": "Products",
+      "brand": "Brand",
+      "leveling": "Leveling",
+      "search": "Search"
+    },
+    "descriptionTemplates": {
+      "products": "Products",
+      "category": "Category",
+      "vehicle": "Vehicle",
+      "categoryBrand": "Category + Brand",
+      "brand": "Brand",
+      "search": "Search"
+    },
+    "notes": {
+      "invalidPage": "page={value} is invalid, treated as page 1.",
+      "unknownSort": "sort={value} isn't a known sort option.",
+      "search": "Search query present: canonical points to /products and the title length limit doesn't apply.",
+      "tooManySegments": "More than 3 segments after /products; the rest are ignored.",
+      "unknownCategory": "Category \"{slug}\" is unknown; in production this should ideally be a 404.",
+      "wrongOrder": "Segment order is wrong (should be category/vehicle/brand); ideally a 308 redirect.",
+      "unknownSegment": "Segment \"{slug}\" isn't a known vehicle or brand; ignored.",
+      "categoryQueryIgnored": "The category query is ignored because the path already has a category.",
+      "categoryQueryPromoted": "category={slug} moves into the path as /products/{slug}.",
+      "unknownVehicle": "Vehicle \"{slug}\" is unknown.",
+      "unknownBrand": "Brand \"{slug}\" is unknown.",
+      "multiValue": "A filter with more than one value isn't a PLP: noindex, canonical to the nearest PLP.",
+      "comboWithoutCategory": "Brand + vehicle without a category isn't a PLP: noindex, canonical to /products.",
+      "indexRule": "Total products {total} {totalOp} {minProducts}, in stock {stock}% {stockOp} {minStock}% → {index}.",
+      "sortVariant": "Sort doesn't create a new page; canonical drops it.",
+      "pageOneVariant": "page=1 is the first page; canonical drops it.",
+      "variant": "This URL is a variant; its index status follows the canonical.",
+      "titleWordsDropped": "Title is over {max} characters; removed \"{words}\".",
+      "titleStillLong": "Title is still {length} characters after removing every optional word."
     }
   }
 }
