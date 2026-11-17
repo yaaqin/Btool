@@ -1,0 +1,170 @@
+{
+  "note": "Ambang batas awal untuk prototipe. Nilai final perlu disepakati dengan PLN (operator) dan Wiraky (spesifikasi perangkat). Satu-satunya sumber aturan: dashboard dan katalog sama-sama membaca file ini.",
+  "rules": [
+    {
+      "id": "data_stale",
+      "title": "Site tidak mengirim data",
+      "metric": "site.dataAgeMin",
+      "unit": "menit",
+      "condition": "above",
+      "warning": 5,
+      "critical": 15,
+      "source": "wiraky",
+      "why": "Kalau gateway/modem putus, semua nilai di layar adalah data lama. Operator harus tahu bahwa yang dilihat bukan kondisi sekarang.",
+      "action": "Cek sinyal 3G/4G dan catu daya controller + modem. Kirim teknisi jika > 1 jam."
+    },
+    {
+      "id": "dg_fault",
+      "title": "Diesel generator FAULT",
+      "metric": "dg.status",
+      "unit": "",
+      "condition": "equals",
+      "critical": "FAULT",
+      "source": "wiraky",
+      "why": "DG adalah sumber cadangan utama. Kalau DG fault, beban hanya ditopang baterai 24 kWh yang habis dalam 1–2 jam.",
+      "action": "Cek panel DG protection & controller, kurangi beban jika SOC terus turun."
+    },
+    {
+      "id": "dg_not_started",
+      "title": "SOC rendah tapi DG belum jalan",
+      "metric": "dg.notStartedLowSoc",
+      "unit": "",
+      "condition": "equals",
+      "warning": "YES",
+      "source": "wiraky",
+      "why": "Pada skema hybrid, DG seharusnya otomatis start sebelum baterai habis. SOC < 20 % dengan DG STOP berarti auto-start gagal atau mode manual.",
+      "action": "Start DG secara manual / remote, lalu cek setelan auto-start di controller."
+    },
+    {
+      "id": "battery_soc",
+      "title": "State of Charge baterai rendah",
+      "metric": "battery.soc",
+      "unit": "%",
+      "condition": "below",
+      "warning": 20,
+      "critical": 10,
+      "source": "wiraky",
+      "why": "Di bawah 10 % BMS akan memutus baterai (low-voltage cut-off) dan beban padam jika DG tidak jalan.",
+      "action": "Pastikan DG jalan dan mengisi baterai."
+    },
+    {
+      "id": "battery_soh",
+      "title": "State of Health baterai menurun",
+      "metric": "battery.soh",
+      "unit": "%",
+      "condition": "below",
+      "warning": 80,
+      "critical": 70,
+      "source": "wiraky",
+      "why": "SOH < 80 % umumnya batas akhir garansi baterai lithium. Kapasitas efektif 24 kWh tinggal < 19 kWh.",
+      "action": "Jadwalkan pemeriksaan modul baterai dan rencana penggantian."
+    },
+    {
+      "id": "battery_voltage",
+      "title": "Tegangan baterai di luar batas",
+      "metric": "battery.voltage",
+      "unit": "V",
+      "condition": "outside",
+      "warning": [46, 56.5],
+      "critical": [44.8, 57.6],
+      "source": "wiraky",
+      "why": "Bank LiFePO4 16 seri (48 V nominal) aman di 44,8–57,6 V (2,8–3,6 V/sel). Di luar itu BMS akan trip.",
+      "action": "Cek BMS dan setelan charge/discharge inverter."
+    },
+    {
+      "id": "phase_voltage",
+      "title": "Tegangan fasa di luar standar",
+      "metric": "meter.phaseVoltage",
+      "unit": "V",
+      "condition": "outside",
+      "warning": [198, 231],
+      "critical": [187, 242],
+      "source": "wiraky",
+      "why": "SPLN 1:1995 membatasi tegangan pelayanan +5 % / −10 % dari 220 V (198–231 V). Lebih jauh dari itu peralatan pelanggan bisa rusak.",
+      "action": "Cek AVR DG / setelan inverter, dan sambungan fasa di panel."
+    },
+    {
+      "id": "current_unbalance",
+      "title": "Arus antar-fasa tidak seimbang",
+      "metric": "meter.currentUnbalance",
+      "unit": "%",
+      "condition": "above",
+      "warning": 10,
+      "critical": 20,
+      "source": "wiraky",
+      "why": "Ketidakseimbangan tinggi memanaskan trafo dan DG serta menurunkan kapasitas yang bisa dipakai.",
+      "action": "Atur ulang pembagian beban pelanggan antar-fasa."
+    },
+    {
+      "id": "inverter_load",
+      "title": "Beban inverter mendekati kapasitas",
+      "metric": "inverter.loadingPct",
+      "unit": "%",
+      "condition": "above",
+      "warning": 90,
+      "critical": 100,
+      "source": "wiraky",
+      "why": "Setiap inverter berkapasitas 24 kW. Di atas 100 % inverter akan overload trip.",
+      "action": "Jalankan DG untuk berbagi beban."
+    },
+    {
+      "id": "fuel_level",
+      "title": "Bahan bakar DG menipis",
+      "metric": "dg.fuelPct",
+      "unit": "%",
+      "condition": "below",
+      "warning": 30,
+      "critical": 15,
+      "source": "usulan",
+      "why": "Pengiriman BBM ke lokasi terpencil butuh waktu berhari-hari. Persentase butuh kapasitas tangki (belum ada di payload).",
+      "action": "Jadwalkan pengiriman BBM."
+    },
+    {
+      "id": "battery_temp",
+      "title": "Suhu baterai tinggi",
+      "metric": "battery.tempC",
+      "unit": "°C",
+      "condition": "above",
+      "warning": 45,
+      "critical": 55,
+      "source": "usulan",
+      "why": "Baterai lithium cepat menurun di atas 45 °C dan berisiko thermal runaway di atas 55–60 °C.",
+      "action": "Cek pendingin kabinet dan kurangi arus charge."
+    },
+    {
+      "id": "frequency",
+      "title": "Frekuensi di luar batas",
+      "metric": "grid.frequencyHz",
+      "unit": "Hz",
+      "condition": "outside",
+      "warning": [49.5, 50.5],
+      "critical": [49, 51],
+      "source": "usulan",
+      "why": "Frekuensi turun menandakan DG/inverter kelebihan beban. Nominal sistem 50 Hz.",
+      "action": "Kurangi beban atau tambah pembangkit yang jalan."
+    },
+    {
+      "id": "dg_coolant",
+      "title": "Suhu air pendingin DG tinggi",
+      "metric": "dg.coolantC",
+      "unit": "°C",
+      "condition": "above",
+      "warning": 95,
+      "critical": 102,
+      "source": "usulan",
+      "why": "Overheat adalah penyebab umum DG shutdown dan kerusakan mesin.",
+      "action": "Cek radiator, level air pendingin, dan V-belt."
+    },
+    {
+      "id": "door_open",
+      "title": "Pintu kabinet terbuka",
+      "metric": "io.door",
+      "unit": "",
+      "condition": "equals",
+      "warning": "OPEN",
+      "source": "usulan",
+      "why": "Diagram Wiraky sudah menyebut sensor pintu (dry contact), tapi belum ada di format JSON. Pintu terbuka tanpa jadwal maintenance = potensi pencurian / bahaya sengatan.",
+      "action": "Konfirmasi ke petugas lapangan apakah ada maintenance."
+    }
+  ]
+}
